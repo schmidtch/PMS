@@ -1,0 +1,295 @@
+<script>
+$("#newVisit").click(function(e){
+	var svnr = $("#svnr").text();
+	var gebdat = $("#gebdat").text();
+	var pid = $("#pid").val();
+	patient = JSON.stringify({svnr : svnr, birthdate : gebdat, patid : pid});
+	$.ajax({
+		type: "POST",
+		url: "visit/newVisit",
+		dataType: "json",
+		data: patient,
+		contentType: "application/json;charset=UTF-8",
+		success: function(data){
+			if(data.msg=="success"){
+				$.ajax({
+					type: "POST",
+					url: "patient/show",
+					dataType: "json",
+					contentType: "application/json; charset=utf-8",
+					data : JSON.stringify({ svnr : svnr, birthdate : gebdat}),
+					success: function (resp) {
+						if(resp.msg=="success"){
+							$("#content").html(resp.data);
+						} else {
+							$.alert({
+							    title: 'Fehler',
+							    content: "Ein unerwarteter Fehler ist aufgetreten!",
+							    confirm: function(){}
+							});
+						}
+					}
+				});
+			} else {
+				$.alert({
+			    	title: 'Fehler',
+			    	content: data.msg,
+			    	confirm: function(){}
+				});
+			}
+		}
+	});
+});
+$("#back").click(function(){
+	$.ajax({
+		type: "GET",
+		url: "patient/show",
+		dataType: "html",
+		contentType: "text/html;charset=UTF-8",
+		success: function (data) {
+			$("#content").html(data);
+		}
+	});
+});
+diagFormIsShown = false;
+var caseno = "";
+$(".services").click(function(e){
+	if(!diagFormIsShown) {
+		var id = $(this).parent().attr('id');
+		if(caseno!="" && id!=caseno){
+			if($("#"+caseno+" .serviceContainer").css('display')=='block'){
+				$("#"+caseno+" .serviceContainer").hide();
+			}
+		}
+		var display = $("#"+id+" .serviceContainer").css('display');
+		if(display=='none'){
+			$("#"+id+" .serviceContainer").show();
+		} else if(display=='block') {
+			$("#"+id+" .serviceContainer").hide();
+		}
+		if(caseno==id){
+			caseno="";
+		} else {
+			caseno=id;
+		}
+	} else {
+		$.alert({
+			    title: 'Neue Diagnose',
+			    content: "Das Diagnose-Formular ist ge&ouml;ffnet! Bitte dieses zuerst schlie&szlig;en!",
+			    confirm: function(){}
+			});
+	}
+});
+
+$("div.serviceContainer input.saveServices").click(function(e){
+	var selectedServices = "";
+	$('div#'+caseno+' div.serviceContainer input:checked').each(function() {
+    	selectedServices += $(this).val()+";";
+	});
+	services = JSON.stringify({caseno : caseno, selectedServices : selectedServices});
+	
+	$.ajax({
+		type: "POST",
+		url: "service/newService",
+		dataType: "json",
+		contentType: "application/json; charset=utf-8",
+		data : services,
+		success: function (data) {
+			var content = "";
+			if(data.status=="success"){
+				content="Erfolgreich gespeichert!";
+			} else {
+				content='Fehler beim verspeichern der Leistugen für den Patienten!<br />'+data.msg;
+			}
+			$.alert({
+			    title: 'Leistungen Speichern',
+			    content: content,
+			    confirm: function(){
+			    	$("#"+caseno+" .serviceContainer").hide();
+			    	caseno="";
+			    }
+			});
+		}
+	});
+});
+
+oldEl = undefined;
+$(".showDiagnosis").click(function(e){
+	if(!diagFormIsShown) {
+		$("div.diagnoseContainer").hide();
+		el = $(this).parent().find("div.diagnoseContainer");
+		if(oldEl==undefined){
+			$(el).show();
+			oldEl = el;
+		} else if($(oldEl).text()!=$(el).text()){
+			$(el).show();
+			oldEl = el;
+		} else {
+			oldEl=undefined;
+		}
+	} else {
+		$.alert({
+			    title: 'Neue Diagnose',
+			    content: "Das Diagnose-Formular ist ge&ouml;ffnet! Bitte dieses zuerst schlie&szlig;en!",
+			    confirm: function(){}
+			});
+	}
+});
+$(".exportHonoranote").click(function(e){
+	var caseno = $(this).parent().attr('id');
+	var pid = $("#pid").val();
+	$.ajax({
+		type: "POST",
+		url: "tools/exportPDF",
+		beforeSend: function( xhr ) {
+    		$("#dataContainer").fadeOut(function() {
+				$("#menuBar").hide();
+    			$("#ajaxLoader").fadeIn();
+    		});	
+  		},
+		dataType: "json",
+		contentType: "application/json;charset=UTF-8",
+		data: JSON.stringify({ caseno  : caseno, pid : pid }),
+		success: function (data) {
+			var content = "";
+			if(data.state=='success'){
+				content = 'Honorarnote erfolgreich exportiert!';
+			} else {
+				content = 'Fehler: '+data.error;
+			}
+			$.alert({
+			    title: 'Honorarexport!',
+			    content: content,
+			    confirm: function(){
+			    	$("#ajaxLoader").fadeOut(function() {
+				    	$("#dataContainer").fadeIn();
+				    	$("#menuBar").fadeIn();
+			    	});
+			    }
+			});
+		}
+	});
+});
+$(".importFoto").click(function(){
+	var caseno = $(this).parent().attr('id');
+	$("#"+caseno+"_uploadContainer").show();
+});
+$(".showFotos").click(function(){
+	var caseno = $(this).parent().attr('id');
+	resultEl = $("#"+caseno+"_showFotoContainer");
+	actEl = $(this);
+	if(resultEl.html()!="") {
+		resultEl.hide();
+		resultEl.html("");
+		actEl.html("Show");
+	} else {
+		$.ajax({
+		    crossDomain: true,
+		    type: "POST",
+		    url: "foto/showF", 
+		    contentType: "application/json",
+		    dataType: "json",
+		    data: JSON.stringify({caseno : caseno})
+		}).done(function (data) {
+			if(data.state=="success") {
+			    actEl.html("Hide");
+			    resultEl.html('<img src="data:image/jpg;base64,' + data.pic + '" style="width:300px;" />');
+			    resultEl.show();
+			} else if (data.state=="error"){
+				alert(data.msg);
+			}
+		});
+	}
+});
+
+function uploadFoto(caseno) {
+	var file = $('#upload_'+caseno).get(0).files[0];
+	var formData = new FormData();
+	formData.append('file', file);
+	formData.append('caseno', caseno);
+	$.ajax({
+	  url : 'foto/upload',
+	  type : 'POST',
+	  data : formData,
+	  cache : false,
+	  contentType : false,
+	  processData : false,
+	  success : function(data) {
+	    var state = data.state;
+	    var msg = data.msg;
+	    if(state=="success"){}else if(state=="error") {}
+	    $.alert({
+			title: 'Foto-Upload',
+			content: msg,
+			confirm: function(){
+				$("#"+caseno+"_uploadContainer").hide();
+			}
+		});
+	  },
+	  error : function(jqXHR, textStatus, errorThrown) {
+	    alert(textStatus);
+	  }
+	});
+}
+
+function getDiagForm(id){
+	if(!diagFormIsShown) {
+		$.ajax({
+			type: "GET",
+			url: "diagnose/newDiagnose",
+			dataType: "html",
+			contentType: "text/html;charset=UTF-8",
+			success: function (data) {
+				$("#"+id).append(data); 
+				$("#newDiagnose").hide();
+				$("#actCaseno").val(id);
+				$("#newDiagForm").slideDown();
+			}
+		});
+		diagFormIsShown=true;
+	} else {
+		$.alert({
+			    title: 'Neue Diagnose',
+			    content: "Das Diagnose-Formular ist bereits ge&ouml;ffnet bitte dieses zuerst schlie&szlig;en!",
+			    confirm: function(){}
+			});
+	}
+}
+
+function cancelUpload(caseno) {
+	$("#"+caseno+"_uploadContainer").hide();
+}
+
+</script>
+<div id="menuBar" style="width:90%; margin:auto; margin-top:20px;">
+	<span class="link" id="back">Zur&uuml;ck</span> | 
+	<span class="link" id="newVisit">Neuer Besuch</span>
+</div>
+<div id="ajaxLoader"><img src="pictures/ajax-loader.gif" /></div>
+<div id="dataContainer">
+	<div id="person">
+		<div id="persondata">
+			<h3>$patientsName</h3>
+			<span class="headline">SVNR: </span><span id="svnr">$svnr</span><br />
+			<span class="headline">Geburtsdatum: </span><span id="gebdat">$gebdat</span>
+		</div>
+		<div id="address">
+			<h3>Adresse:</h3>
+			<span class="headline">Stra&szlig;e: </span><span>$street</span><br />
+			<span class="headline">PLZ: </span><span>$zip</span><br />
+			<span class="headline">Ort: </span><span>$location</span><br />
+			<span class="headline">Staat: </span><span>$country</span>
+		</div>
+		<div id="contact">
+			<h3>Kontakt:</h3>
+			<span class="headline">Telefon: </span><span>$telefon</span><br />
+			<span class="headline">Email: </span><span>$email</span>
+		</div>
+	</div>
+	<div id="visitsContainer">
+		<h3>Besuche</h3>
+			$visits
+	</div>
+	<input type="hidden" id="pid" value="$pid" />
+	<br style="clear:both;" />
+</div>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>PatientManagementSystem</title>
+	<link rel="stylesheet" type="text/css"
+		href="style/style.css" />
+	<link rel="stylesheet"
+		href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	<link rel="stylesheet"
+		href="style/jquery-confirm.min.css" />
+	<script src="http://code.jquery.com/jquery-1.9.1.js" type="text/javascript"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js" type="text/javascript"></script>
+	<script src="javascript/md5.js" type="text/javascript"></script>
+	<script src="javascript/json2.js" type="text/javascript"></script>
+	<script src="javascript/jquery.tablesorter.js" type="text/javascript"></script>
+	<script src="javascript/jquery-confirm.min.js" type="text/javascript"></script>
+	<script src="javascript/jquery.ajaxfileupload.js" type="text/javascript"></script>
+	
+	<script>
+		$(document).ready(function(e) {
+			$.ajaxSetup({
+			    scriptCharset: "utf-8",
+			    contentType: "text/html; charset=utf-8"
+			});
+			$("#applicationContainer").css('min-height', $(this).height()-40);
+			$("#loginForm").submit(function(e) {
+				var username = MD5($("#username").val());
+				var password = MD5($("#password").val());
+				if(username=="21232f297a57a5a743894a0e4a801fc3" && password=="21232f297a57a5a743894a0e4a801fc3"){
+					$(loginForm).fadeOut(function complete(){ 
+						$("#applicationContainer").fadeIn(); 
+					});
+				} else {
+					alert('Access denied!');
+				}
+				$("#username").val('');
+				$("#password").val('');
+				return false;
+			});
+			$("#menu ul li").click(function(e){
+		        var url = $(this).attr('id');
+		        url = "patient/"+url;
+		        //$.get(url, function(data) { $("#content").html(data);  });
+		        
+		        $.ajax({
+			        type: "GET",
+			        url: url,
+			        dataType: "html",
+			        contentType: "text/html;charset=UTF-8",
+			        success: function (data) {
+			           $("#content").html(data);
+			        }
+			    });
+			});
+		});
+	</script>
+</head>
+<body>
+	<!--<div id="loginContainer">
+		<form id="loginForm">
+			<fieldset>
+				<legend>PatientManagementSystem</legend>
+				<br />
+				<label for="username">Username: </label><input type="text" name="username" id="username" /><br style="clear: both;" />
+				<label for="password">Password: </label><input type="password" name="password" id="password" /><br style="clear: both;" />
+				<p style="text-align: right; padding-right: 20px;">
+					<input style="width: 80px;" type="submit" name="login" value="login" />
+				</p>
+			</fieldset>
+		</form>
+	</div>-->
+	<div id="applicationContainer">
+		<div id="head">
+			<h1>Welcome to PMS</h1>
+		</div>
+		<div id="menu">
+			<ul>
+				<li id="show">
+					List Patient
+				</li>
+				<li id="new">
+					New Patient
+				</li>
+				<li id="search">
+					Search Patient
+				</li>
+			</ul>
+		</div>
+		<div id="content"></div>
+	</div>
+		
+</body>
+</html>

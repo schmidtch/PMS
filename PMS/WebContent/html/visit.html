@@ -1,0 +1,22 @@
+<div class="visit">
+	<span>Besuch am $visitdate</span>
+	<div id="$caseno" style="padding-left:40px;">
+		<span style="display:$hasAll;"><span class="link newDiagnose" onClick="javascript:getDiagForm('$caseno')">Neue Diagnose</span> | </span>
+		$diagButton
+		<span class="link services">Leistungen</span> | 
+		<span class="link exportHonoranote">Honoranote</span> |
+		<span class="link importFoto">Foto</span> |
+		<span class="link showFotos">Show</span>
+		<br />
+		$printServicesdiagContent
+		<div id="$caseno_uploadContainer" class="uploadContainer">
+			<br />
+			<input type="file" id="upload_$caseno" name="file" />
+			<p class="buttonBlock">
+				<input type="button" value="Upload" onclick="javascript:uploadFoto($caseno)" />
+				<input type="button" value="Abbrechen" onclick="javascript:cancelUpload($caseno)" />
+			</p>
+		</div>
+		<div id="$caseno_showFotoContainer" class="fotoContainer"></div>
+	</div>
+</div>

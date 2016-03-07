@@ -1,0 +1,80 @@
+<div id="newDiagnoseFormContainer">
+	<script>
+	$("#newDiagnoseForm").submit(function(event){
+		var title = $("#type").val();
+		var type = $("#type").val();
+		var text = $("#text").val();
+		var caseno = $("#actCaseno").val();
+		diagnose = JSON.stringify({title : title, type : type, text : text, caseno : caseno});
+		$.ajax({
+			type : "POST",
+			url : "diagnose/newDiagnose",
+			contentType : "application/json; charset=utf-8",
+			dataType : "json",
+			data : diagnose
+		}).done(function(msg) {
+			var responseText = msg.state;
+			if(responseText=="success"){
+				$.alert({
+				    title: 'Erfolgreich!',
+				    content: 'Die Diagnose '+title+' hinzugefügt!',
+				    confirm: function(){
+				    	$.ajax({
+							type: "POST",
+							url: "patient/show",
+							dataType: "json",
+							contentType: "application/json; charset=utf-8",
+							data : JSON.stringify({ svnr : $("#svnr").text(), birthdate : $("#gebdat").text()}),
+							success: function (data) {
+								if(data.msg=="success"){
+									$("#content").html(data.data);
+								} else {
+									alert("Error");
+								}
+							}
+						});
+				    }
+				});
+			} else {
+				$.alert({
+				    title: 'Fehler!',
+				    content: 'Error: '+msg.error,
+				    confirm: function(){}
+				});
+			}		
+		});	
+		diagFormIsShown=false;
+		return false;
+	});
+	$("#cancel").click(function(e){
+		$.confirm({
+		    title: 'Abbrechen!',
+		    content: 'Diagnose wirklich Abbrechen?',
+		    confirmButton: 'Ja',
+    		cancelButton: 'Nein',
+		    confirm: function(){
+				$("#newDiagnose").show();
+				$("#newDiagnoseFormContainer").remove();
+				diagFormIsShown=false;
+		    }
+		});
+	});
+	</script>
+	<h3>Neue Diagnose</h3>
+	<form id="newDiagnoseForm" action="">
+		<!--<label for="title">Title: </label><input required type="text" id="title" required maxlength="150" /><br />-->
+		<label for="type">Type: </label>
+		<select id="type" required>
+			<option value="">Bitte w&auml;hlen</option>
+			<option value="sm">Schulmedizinisch</option>
+			<option value="ch">Chinesisch</option>
+		</select>
+		<br />
+	<!--<label for="text">Text: </label>--><textarea name="text" id="text" rows="8" cols="40" required></textarea><br />
+		<input type="hidden" id="actCaseno" value="" />
+		<p class="buttonBlock">
+			<input type="submit" name="save" value="Speichern" style="width:100px; "/>
+			<input type="button" name="cancel" value="Abbrechen" id="cancel" style="width:100px;" />
+		</p>
+	</form>
+</div>

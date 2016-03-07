@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+  <display-name>PMS</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  <resource-ref>
+  	<description>DB Connection</description>
+  	<res-ref-name>jdbc/pms</res-ref-name>
+  	<res-type>javax.sql.DataSource</res-type>
+  	<res-auth>Container</res-auth>
+  </resource-ref>
+  
+  <servlet>
+  	<servlet-name>PatientWS</servlet-name>
+  	<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+  	<load-on-startup>1</load-on-startup>	
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>PatientWS</servlet-name>
+  	<url-pattern>/patient/*</url-pattern>
+  </servlet-mapping>	
+  
+  <servlet>
+  	<servlet-name>VisitWS</servlet-name>
+  	<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+  	<load-on-startup>1</load-on-startup>		
+  </servlet>
+   <servlet-mapping>
+  	<servlet-name>VisitWS</servlet-name>
+  	<url-pattern>/visit/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>DiagnoseWS</servlet-name>
+  	<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+  	<load-on-startup>1</load-on-startup>		
+  </servlet>
+   <servlet-mapping>
+  	<servlet-name>DiagnoseWS</servlet-name>
+  	<url-pattern>/diagnose/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>ServiceWS</servlet-name>
+  	<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+  	<load-on-startup>1</load-on-startup>		
+  </servlet>
+   <servlet-mapping>
+  	<servlet-name>ServiceWS</servlet-name>
+  	<url-pattern>/service/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>ToolsWS</servlet-name>
+  	<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+  	<load-on-startup>1</load-on-startup>		
+  </servlet>
+   <servlet-mapping>
+  	<servlet-name>ToolsWS</servlet-name>
+  	<url-pattern>/tools/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>FotoWS</servlet-name>
+  	<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+  	<load-on-startup>1</load-on-startup>		
+  </servlet>
+   <servlet-mapping>
+  	<servlet-name>FotoWS</servlet-name>
+  	<url-pattern>/foto/*</url-pattern>
+  </servlet-mapping>
+  
+</web-app>
