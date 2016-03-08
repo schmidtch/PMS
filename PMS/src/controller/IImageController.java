@@ -15,7 +15,7 @@ public class IImageController {
 
 	public int insertImageForVisit(IImage i, int caseno) throws SQLException {
 		
-		PreparedStatement stmt = DBConnectionHandler.getConnection().prepareStatement("insert into images (name, image, description, caseno) values ('"+i.getName()+"', ?, '"+i.getDescription()+"', "+String.valueOf(caseno)+")");
+		PreparedStatement stmt = DBConnectionHandler.getConnection().prepareStatement("insert into Images (name, image, description, caseno) values ('"+i.getName()+"', ?, '"+i.getDescription()+"', "+String.valueOf(caseno)+")");
 		stmt.setBinaryStream(1, new ByteArrayInputStream(i.getImg().getBytes(StandardCharsets.UTF_8)));
 		stmt.executeUpdate();
 		stmt.close();
@@ -28,7 +28,7 @@ public class IImageController {
 		ArrayList<IImage> images = new ArrayList<IImage>();
 		
 		Statement stmt = DBConnectionHandler.getConnection().createStatement();
-		ResultSet rs = stmt.executeQuery("select * from images where caseno="+String.valueOf(caseno));
+		ResultSet rs = stmt.executeQuery("select * from Images where caseno="+String.valueOf(caseno));
 		while (rs.next()) {
 			images.add(new IImage(rs));
 		}

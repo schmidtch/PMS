@@ -17,7 +17,7 @@ public class ServiceCatalogue {
 		Properties p = new Properties();
 		
 		Statement stmt = DBConnectionHandler.getConnection().createStatement();
-		ResultSet rs = stmt.executeQuery("select * from service_catalogue");
+		ResultSet rs = stmt.executeQuery("select * from Service_Catalogue");
 		setNumberOfService(rs.getFetchSize());
 		while(rs.next()) {
 			p.put("$id", rs.getString("service_catalogue_id"));
