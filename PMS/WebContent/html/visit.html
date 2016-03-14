@@ -1,5 +1,5 @@
 <div class="visit">
-	<span>Besuch am $visitdate</span>
+	<span id="$casenoTitle">Besuch am $visitdate</span>
 	<div id="$caseno" style="padding-left:40px;">
 		<span style="display:$hasAll;"><span class="link newDiagnose" onClick="javascript:getDiagForm('$caseno')">Neue Diagnose</span> | </span>
 		$diagButton
@@ -10,8 +10,14 @@
 		<br />
 		$printServicesdiagContent
 		<div id="$caseno_uploadContainer" class="uploadContainer">
-			<br />
-			<input type="file" id="upload_$caseno" name="file" />
+			<h3 style="text-align:center;">Foto für Besuch am $visitdate hochladen:</h3>
+			<p style="text-align:center;">
+				<label class="custom-file-input" for="upload_$caseno" ></label>
+				<input id="upload_$caseno" class="upload" type="file" multiple="multiple" name="_photos" accept="image/*" style="visibility: hidden">
+			</p>
+			<div class="preview"></div>
+			
+			<!-- <input type="file" id="upload_$caseno" name="file" multiple="multiple" class="custom-file-input"/> -->
 			<p class="buttonBlock">
 				<input type="button" value="Upload" onclick="javascript:uploadFoto($caseno)" />
 				<input type="button" value="Abbrechen" onclick="javascript:cancelUpload($caseno)" />

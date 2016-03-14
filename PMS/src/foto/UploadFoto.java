@@ -39,67 +39,70 @@ public class UploadFoto {
 		JSONObject response = new JSONObject();
 
 		boolean saveFile=false;
-		
-		FormDataBodyPart filePart = form.getField("file");
-		FormDataBodyPart casenoPart = form.getField("caseno");
-		ContentDisposition headerOfFilePart =  filePart.getContentDisposition();
-			
-		InputStream inStream = filePart.getValueAs(InputStream.class);
+		FormDataBodyPart filePart = null,  descPart=null;
+		ContentDisposition headerOfFilePart = null;
+		int caseno = Integer.parseInt(form.getField("caseno").getValue()),anzFiles = Integer.parseInt(form.getField("anzPix").getValue());
+		InputStream inStream = null;
 		String base64Pic = "", msg = "", state = "";
-		try {
-
-			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-			int nRead;
-			byte[] data = new byte[16384];
-			while ((nRead = inStream.read(data, 0, data.length)) != -1) {
-			  buffer.write(data, 0, nRead);
-			}
-			buffer.flush();
-			byte[] bytes =  buffer.toByteArray();
-			
-	        base64Pic = new String(Base64.encodeBase64(bytes));
-	        
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		if(base64Pic.length()>0){
-			int caseno = Integer.parseInt(casenoPart.getValue());
-			
-			IImage i = new IImage(base64Pic);
-			i.setName(headerOfFilePart.getFileName());
-			i.setDescription(headerOfFilePart.getFileName());
-			IImageController ic = new IImageController();
-			try {
-				ic.insertImageForVisit(i, caseno);
-				state="success";
-				msg="Bild erforlgreich hinzugeügt!";
-			} catch (SQLException e) {
-		    	state="error";
-		    	msg=e.getMessage();
-				e.printStackTrace();
-			} 
-			
-			if(saveFile){
-				try {
-					String filePath = "/Volumes/Daten/PMS/data/patients/Pat_ient_2510/fotos/" + headerOfFilePart.getFileName();
-					InputStream saveFileStream = filePart.getValueAs(InputStream.class);
-			        OutputStream outpuStream = new FileOutputStream(new File(filePath));
-			        int read = 0;
-			        byte[] bytes2 = new byte[1024];
-			        while ((read = saveFileStream.read(bytes2)) != -1) {
-			            outpuStream.write(bytes2, 0, read);
-			        }
-			        outpuStream.flush();
-			        outpuStream.close();
-			    } catch (IOException e) {
-			        e.printStackTrace();
-			    }
-			}
-		} else {
-			state="error";
-			msg="Error with Base64 Encoding!";
-		}
+		IImageController ic = new IImageController();
 		
+		for(int i=0; i<anzFiles; i++){
+			filePart = form.getField("file_"+String.valueOf(i));
+			descPart = form.getField("description_"+String.valueOf(i));
+			headerOfFilePart = filePart.getContentDisposition();
+				
+			inStream = filePart.getValueAs(InputStream.class);
+			try {
+	
+				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+				int nRead;
+				byte[] data = new byte[16384];
+				while ((nRead = inStream.read(data, 0, data.length)) != -1) {
+				  buffer.write(data, 0, nRead);
+				}
+				buffer.flush();
+				byte[] bytes =  buffer.toByteArray();
+				
+		        base64Pic = new String(Base64.encodeBase64(bytes));
+		        
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			if(base64Pic.length()>0){				
+				IImage ii = new IImage(base64Pic);
+				ii.setName(headerOfFilePart.getFileName());
+				ii.setDescription(descPart.getValue());
+				try {
+					ic.insertImageForVisit(ii, caseno);
+					state="success";
+					msg="Bild erforlgreich hinzugeügt!";
+				} catch (SQLException e) {
+			    	state="error";
+			    	msg=e.getMessage();
+					e.printStackTrace();
+				} 
+				
+				if(saveFile){
+					try {
+						String filePath = "/Volumes/Daten/PMS/data/patients/Pat_ient_2510/fotos/" + headerOfFilePart.getFileName();
+						InputStream saveFileStream = filePart.getValueAs(InputStream.class);
+				        OutputStream outpuStream = new FileOutputStream(new File(filePath));
+				        int read = 0;
+				        byte[] bytes2 = new byte[1024];
+				        while ((read = saveFileStream.read(bytes2)) != -1) {
+				            outpuStream.write(bytes2, 0, read);
+				        }
+				        outpuStream.flush();
+				        outpuStream.close();
+				    } catch (IOException e) {
+				        e.printStackTrace();
+				    }
+				}
+			} else {
+				state="error";
+				msg="Error with Base64 Encoding!";
+			}
+		}
 		response.put("msg", msg);
 		response.put("state", state);
 		

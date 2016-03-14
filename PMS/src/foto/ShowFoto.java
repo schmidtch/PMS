@@ -27,8 +27,9 @@ public class ShowFoto {
 		JSONObject in = new JSONObject(input);
 		JSONObject response = new JSONObject();
 		IImageController ic = new IImageController();
-		String msg = "", state="", pic="";
+		String msg = "", state="";
 		int caseno = Integer.parseInt(in.getString("caseno"));
+		int count = 0;
 		
 		try {
 			ArrayList<IImage> images = ic.getAllImagesForVisit(caseno);
@@ -36,9 +37,11 @@ public class ShowFoto {
 				state="error";
 				msg="Keine Fotos vorhanden!";
 			} else {
+				
 				state="success";
 				for(IImage i : images){
-					pic=i.getImg();
+					response.put("pic_"+String.valueOf(count),i.getImg());
+					count++;
 				}
 			}
 	        	
@@ -48,10 +51,9 @@ public class ShowFoto {
 			state="error";
 			e.printStackTrace();
 		}	
-		
+		response.put("anz", String.valueOf(count));
 		response.put("state", state);
 		response.put("msg", msg);
-		response.put("pic", pic);
 		
 		return response.toString();
 	}

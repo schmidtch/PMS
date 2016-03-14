@@ -1,7 +1,4 @@
 <script>
-$(document).ready(function(){
-	$("#btnForm").fancybox();
-})
 $("#newVisit").click(function(e){
 	var svnr = $("#svnr").text();
 	var gebdat = $("#gebdat").text();
@@ -54,13 +51,9 @@ $("#back").click(function(){
 		}
 	});
 });
-$("#fotoCompare").click(function(e){
+$("#compareFoto").click(function(e){
 	$.fancybox({
-	    'padding':  0,
-	    'width':    1087,
-	    'height':   610,
-	    'type':     'iframe',
-	    content:   $('#divForm').show()
+        'content' : $("#chooseFotos").html()
     });
 });
 diagFormIsShown = false;
@@ -184,7 +177,14 @@ $(".exportHonoranote").click(function(e){
 });
 $(".importFoto").click(function(){
 	var caseno = $(this).parent().attr('id');
-	$("#"+caseno+"_uploadContainer").show();
+	$.fancybox({
+        'content' : $("#"+caseno+"_uploadContainer").show(),
+        onCleanup: function() { 
+        	$("#"+caseno).append($("#"+caseno+"_uploadContainer"));
+			$("#"+caseno+"_uploadContainer").hide();
+			$(".preview").html('');
+        }
+	});
 });
 $(".showFotos").click(function(){
 	var caseno = $(this).parent().attr('id');
@@ -204,8 +204,12 @@ $(".showFotos").click(function(){
 		    data: JSON.stringify({caseno : caseno})
 		}).done(function (data) {
 			if(data.state=="success") {
+				var anz = data.anz;
 			    actEl.html("Hide");
-			    resultEl.html('<img src="data:image/jpg;base64,' + data.pic + '" style="width:300px;" />');
+			    var j=0;
+			    for(j=0; j<anz; j++){
+			    	resultEl.append('<img src="data:image/jpg;base64,' + data['pic_'+j] + '" style="width:300px;" />');
+			    }
 			    resultEl.show();
 			} else if (data.state=="error"){
 				alert(data.msg);
@@ -213,12 +217,32 @@ $(".showFotos").click(function(){
 		});
 	}
 });
-
+$('input[type=file]').change(function(e){
+	var parId = $(this).parent().attr('id');
+	files=$(this).get(0).files;
+	anz=0;
+	for(i=0; i<files.length; i++){
+		var oFReader = new FileReader();
+        oFReader.readAsDataURL(files[i]);
+        oFReader.onload = function (oFREvent) {
+        	$("div#"+parId+" div.preview").append('<img src="'+oFREvent.target.result+'" name="preview_'+anz+'" style="width:50px;" />') ;
+        	$("div#"+parId+" div.preview").append('<select id="kategorie_'+anz+'"><option value="sonstige">Sonstige</option><option value="zunge">Zunge</option><option value="portrait">Patientenportrait</option></select><br />');
+        	anz++;
+        };
+	}
+});
 function uploadFoto(caseno) {
-	var file = $('#upload_'+caseno).get(0).files[0];
+	var file = $('#upload_'+caseno);
+	var files = file[0].files;
 	var formData = new FormData();
-	formData.append('file', file);
 	formData.append('caseno', caseno);
+	formData.append('anzPix', files.length);
+	anz=0;
+	for(i=0; i<files.length; i++){
+		formData.append('file_'+anz, files[i]);
+		formData.append('description_'+anz, $('#kategorie_'+anz+' option:selected').val());
+		anz++;
+	}
 	$.ajax({
 	  url : 'foto/upload',
 	  type : 'POST',
@@ -234,7 +258,7 @@ function uploadFoto(caseno) {
 			title: 'Foto-Upload',
 			content: msg,
 			confirm: function(){
-				$("#"+caseno+"_uploadContainer").hide();
+				$.fancybox.close();
 			}
 		});
 	  },
@@ -269,7 +293,7 @@ function getDiagForm(id){
 }
 
 function cancelUpload(caseno) {
-	$("#"+caseno+"_uploadContainer").hide();
+	$.fancybox.close();
 }
 
 </script>
@@ -306,11 +330,9 @@ function cancelUpload(caseno) {
 	<input type="hidden" id="pid" value="$pid" />
 	<br style="clear:both;" />
 	
-	<div id="divForm" style="display:none">
-	    <form action="tbd">
-	        File: <input type="file" /><br /><br />
-	        <input type="submit" />
-	    </form>
+	<div id="chooseFotos" style="display:none">
+	    <label>Linkes Foto:</label><select><option>==Bitte wählen==</option><option>test</option></select>
+	    <label>Rechtes Foto:</label><select><option>==Bitte wählen==</option><option>test2</option></select>
 	</div>
 
 
