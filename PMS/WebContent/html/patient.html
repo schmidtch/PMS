@@ -1,4 +1,7 @@
 <script>
+$(document).ready(function(){
+	$("#btnForm").fancybox();
+})
 $("#newVisit").click(function(e){
 	var svnr = $("#svnr").text();
 	var gebdat = $("#gebdat").text();
@@ -50,6 +53,15 @@ $("#back").click(function(){
 			$("#content").html(data);
 		}
 	});
+});
+$("#fotoCompare").click(function(e){
+	$.fancybox({
+	    'padding':  0,
+	    'width':    1087,
+	    'height':   610,
+	    'type':     'iframe',
+	    content:   $('#divForm').show()
+    });
 });
 diagFormIsShown = false;
 var caseno = "";
@@ -263,7 +275,8 @@ function cancelUpload(caseno) {
 </script>
 <div id="menuBar" style="width:90%; margin:auto; margin-top:20px;">
 	<span class="link" id="back">Zur&uuml;ck</span> | 
-	<span class="link" id="newVisit">Neuer Besuch</span>
+	<span class="link" id="newVisit">Neuer Besuch</span> |
+	<span class="link" id="compareFoto">Foto Abgleich</span>
 </div>
 <div id="ajaxLoader"><img src="pictures/ajax-loader.gif" /></div>
 <div id="dataContainer">
@@ -292,4 +305,15 @@ function cancelUpload(caseno) {
 	</div>
 	<input type="hidden" id="pid" value="$pid" />
 	<br style="clear:both;" />
+	
+	<div id="divForm" style="display:none">
+	    <form action="tbd">
+	        File: <input type="file" /><br /><br />
+	        <input type="submit" />
+	    </form>
+	</div>
+
+
+	
+	
 </div>
