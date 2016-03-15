@@ -9,8 +9,10 @@ import javax.ws.rs.core.MediaType;
 
 import org.json.JSONObject;
 
+import model.IImage;
 import model.Patient;
 import model.Visit;
+import controller.IImageController;
 import controller.PatientController;
 import controller.VisitController;
 import utilities.ServiceCatalogue;
@@ -92,6 +94,23 @@ public class ShowPatient {
 					}
 				}
 				pr.put("$visits", visitsData);
+				IImageController iic = new IImageController();
+				String pic="", sex="";
+				IImage ii = iic.getPatientPortrait(p.getPatId());
+				
+				if(ii!=null){
+					pic = "<img id=\"portrait\" src=\"data:image/jpg;base64,"+ ii.getImg() +"\" style=\"width:200px;\" />";
+				} else {
+					if(p.getSex().equals("M")){
+						sex="male";
+					} else if (p.getSex().equals("F")){
+						sex="female";
+					}
+					pic = "<img id=\"portrait\" src=\"pictures/"+sex+".png\" name=\"PatientIcon\" />";
+				}
+				pr.put("$portrait", pic);
+				
+				
 				sr.setReplacements(pr);
 				response.put("data",sr.replaceInFile(this.getClass().getResource("../../../html/patient.html").getPath()));
 			}

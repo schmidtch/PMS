@@ -39,4 +39,21 @@ public class IImageController {
 		return images;
 	}
 	
+	public IImage getPatientPortrait(int pid) throws SQLException {
+		
+		IImage ii = null;
+		
+		Statement stmt = DBConnectionHandler.getConnection().createStatement();
+		ResultSet rs = stmt.executeQuery("select i.* from Images i, Visit v where i.description='portrait' and v.patid="+String.valueOf(pid)+" and v.caseno=i.caseno order by v.caseno desc;");
+		if (rs.next()) {
+			ii = new IImage(rs);
+		}
+		rs.close();
+		stmt.close();
+		DBConnectionHandler.closeConnection();
+		
+		return ii;
+		
+	}
+	
 }

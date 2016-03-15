@@ -164,9 +164,10 @@ public class Patient {
 			title=rs.getString("title");
 			birthname=rs.getString("birthname");
 			svnr=rs.getInt("svnr");
-			birthdate= new SimpleDateFormat("dd.MM.Y").format(rs.getDate("birthdate"));
+			birthdate= new SimpleDateFormat("dd.MM.yyyy").format(rs.getDate("birthdate"));
 			adress = new Adress(rs);
 			contact = new Contact(rs);
+			sex = rs.getString("sex");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

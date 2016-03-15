@@ -53,11 +53,14 @@ public class PatientController {
 	}
 	
 	public Patient getPatientBySVNRBirthdate() throws SQLException{
-		
+		Patient p = null;
 		Statement stmt = DBConnectionHandler.getConnection().createStatement();
-		ResultSet rs = stmt.executeQuery("select * from patientdata where svnr="+String.valueOf(p.getSVNR())+" and birthdate=STR_TO_DATE('"+p.getBirthdate()+"', '%d.%m.%Y')");
-		if(rs.next()) return p.fullFillObject(rs);
-		else return null;
+		ResultSet rs = stmt.executeQuery("select * from patientdata where svnr="+String.valueOf(this.p.getSVNR())+" and birthdate=STR_TO_DATE('"+this.p.getBirthdate()+"', '%d.%m.%Y')");
+		if(rs.next()) p=this.p.fullFillObject(rs);
+		rs.close();
+		stmt.close();
+		DBConnectionHandler.closeConnection();
+		return p;
 	}
 	
 	public Patient getPatientByPid() throws SQLException{
@@ -87,7 +90,6 @@ public class PatientController {
 
 	public void setpList(ArrayList<Patient> pList) {
 		this.pList = pList;
-	}
-	
+	}	
 	
 }

@@ -218,14 +218,14 @@ $(".showFotos").click(function(){
 	}
 });
 $('input[type=file]').change(function(e){
-	var parId = $(this).parent().attr('id');
+	var parId = $(this).parent().parent().attr('id');
 	files=$(this).get(0).files;
 	anz=0;
 	for(i=0; i<files.length; i++){
 		var oFReader = new FileReader();
         oFReader.readAsDataURL(files[i]);
         oFReader.onload = function (oFREvent) {
-        	$("div#"+parId+" div.preview").append('<img src="'+oFREvent.target.result+'" name="preview_'+anz+'" style="width:50px;" />') ;
+        	$("div#"+parId+" div.preview").append('<img src="'+oFREvent.target.result+'" name="preview_'+anz+'" style="width:150px;" /> ') ;
         	$("div#"+parId+" div.preview").append('<select id="kategorie_'+anz+'"><option value="sonstige">Sonstige</option><option value="zunge">Zunge</option><option value="portrait">Patientenportrait</option></select><br />');
         	anz++;
         };
@@ -259,6 +259,7 @@ function uploadFoto(caseno) {
 			content: msg,
 			confirm: function(){
 				$.fancybox.close();
+				refreshPortrait();
 			}
 		});
 	  },
@@ -296,6 +297,37 @@ function cancelUpload(caseno) {
 	$.fancybox.close();
 }
 
+function IsNullOrEmpty(value)
+{
+    return (value == null || value === "");
+}
+
+function refreshPortrait(){
+	pid = $("#pid").val();
+	$.ajax({
+		type: "POST",
+		url: "foto/refreshPortrait",
+		dataType: "html",
+		contentType: "application/json",
+	    dataType: "json",
+	    data: JSON.stringify({pid : pid}),
+		success: function (data) {
+			if(data.state=="success"){
+				if(!IsNullOrEmpty(data.pic)){
+					$("#portrait").attr('src', 'data:image/jpg;base64,'+ data.pic +'');
+				} 
+			} else if(data.state="error"){
+				$.alert({
+				    title: 'Refresh Error',
+				    content: data.msg,
+				    confirm: function(){}
+				});
+			}
+		}
+	});
+	
+}
+
 </script>
 <div id="menuBar" style="width:90%; margin:auto; margin-top:20px;">
 	<span class="link" id="back">Zur&uuml;ck</span> | 
@@ -305,22 +337,27 @@ function cancelUpload(caseno) {
 <div id="ajaxLoader"><img src="pictures/ajax-loader.gif" /></div>
 <div id="dataContainer">
 	<div id="person">
-		<div id="persondata">
-			<h3>$patientsName</h3>
-			<span class="headline">SVNR: </span><span id="svnr">$svnr</span><br />
-			<span class="headline">Geburtsdatum: </span><span id="gebdat">$gebdat</span>
+		<div id="patientPortraiContainer">
+		$portrait
 		</div>
-		<div id="address">
-			<h3>Adresse:</h3>
-			<span class="headline">Stra&szlig;e: </span><span>$street</span><br />
-			<span class="headline">PLZ: </span><span>$zip</span><br />
-			<span class="headline">Ort: </span><span>$location</span><br />
-			<span class="headline">Staat: </span><span>$country</span>
-		</div>
-		<div id="contact">
-			<h3>Kontakt:</h3>
-			<span class="headline">Telefon: </span><span>$telefon</span><br />
-			<span class="headline">Email: </span><span>$email</span>
+		<div id="persondataContainer">
+			<div id="persondata">
+				<h3>$patientsName</h3>
+				<span class="headline">SVNR: </span><span id="svnr">$svnr</span><br />
+				<span class="headline">Geburtsdatum: </span><span id="gebdat">$gebdat</span>
+			</div>
+			<div id="address">
+				<h3>Adresse:</h3>
+				<span class="headline">Stra&szlig;e: </span><span>$street</span><br />
+				<span class="headline">PLZ: </span><span>$zip</span><br />
+				<span class="headline">Ort: </span><span>$location</span><br />
+				<span class="headline">Staat: </span><span>$country</span>
+			</div>
+			<div id="contact">
+				<h3>Kontakt:</h3>
+				<span class="headline">Telefon: </span><span>$telefon</span><br />
+				<span class="headline">Email: </span><span>$email</span>
+			</div>
 		</div>
 	</div>
 	<div id="visitsContainer">

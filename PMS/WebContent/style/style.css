@@ -218,7 +218,7 @@ span.menu{
 	text-decoration: underline;
 }
 span.headline{
-	width:100px;
+	width:120px;
 	display:block;
 	float:left;
 }
@@ -233,6 +233,7 @@ div#visitsContainer{
 div#dataContainer{
 	width:90%;
 	margin:auto;
+	padding-top:10px;
 }
 span.link{
 	color:BLUE;
@@ -288,9 +289,15 @@ div.uploadContainer, div.fotoContainer{
 }
 div.uploadContainer {
 	width:500px;
-	height:300px;
+	height:500px;
 	padding:5px;
 	background-image:url(../fancybox/bg_.png);
+}
+div.preview {
+	width:500px;
+	height:300px;
+	overflow:auto;
+	text-align:center;
 }
  .custom-file-input::-webkit-file-upload-button {
   visibility: hidden;
@@ -315,4 +322,16 @@ div.uploadContainer {
 }
 .custom-file-input:active::before {
   background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+div#patientPortraiContainer{
+	float:left;
+	width:200px;
+	padding-right:70px;
+}
+div#persondataContainer{
+	width:450px;
+	float:left;
+}
+img#portrait{
+	width:200px;
 }
