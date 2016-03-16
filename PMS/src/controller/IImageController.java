@@ -28,7 +28,7 @@ public class IImageController {
 		ArrayList<IImage> images = new ArrayList<IImage>();
 		
 		Statement stmt = DBConnectionHandler.getConnection().createStatement();
-		ResultSet rs = stmt.executeQuery("select * from Images where caseno="+String.valueOf(caseno));
+		ResultSet rs = stmt.executeQuery("select * from Images where caseno="+String.valueOf(caseno)+" and description!='portrait'");
 		while (rs.next()) {
 			images.add(new IImage(rs));
 		}

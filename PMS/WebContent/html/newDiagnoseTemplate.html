@@ -28,8 +28,10 @@
 							success: function (data) {
 								if(data.msg=="success"){
 									$("#content").html(data.data);
+									$.fancybox.close();
 								} else {
 									alert("Error");
+									$.fancybox.close();
 								}
 							}
 						});
@@ -39,11 +41,10 @@
 				$.alert({
 				    title: 'Fehler!',
 				    content: 'Error: '+msg.error,
-				    confirm: function(){}
+				    confirm: function(){$.fancybox.close();}
 				});
 			}		
 		});	
-		diagFormIsShown=false;
 		return false;
 	});
 	$("#cancel").click(function(e){
@@ -53,9 +54,7 @@
 		    confirmButton: 'Ja',
     		cancelButton: 'Nein',
 		    confirm: function(){
-				$("#newDiagnose").show();
-				$("#newDiagnoseFormContainer").remove();
-				diagFormIsShown=false;
+				$.fancybox.close();
 		    }
 		});
 	});

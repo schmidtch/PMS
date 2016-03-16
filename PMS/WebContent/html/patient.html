@@ -192,7 +192,7 @@ $(".showFotos").click(function(){
 	actEl = $(this);
 	if(resultEl.html()!="") {
 		resultEl.hide();
-		resultEl.html("");
+		resultEl.html("<br />");
 		actEl.html("Show");
 	} else {
 		$.ajax({
@@ -209,6 +209,7 @@ $(".showFotos").click(function(){
 			    var j=0;
 			    for(j=0; j<anz; j++){
 			    	resultEl.append('<img src="data:image/jpg;base64,' + data['pic_'+j] + '" style="width:300px;" />');
+			    	resultEl.append('<br />');
 			    }
 			    resultEl.show();
 			} else if (data.state=="error"){
@@ -270,27 +271,21 @@ function uploadFoto(caseno) {
 }
 
 function getDiagForm(id){
-	if(!diagFormIsShown) {
 		$.ajax({
 			type: "GET",
 			url: "diagnose/newDiagnose",
 			dataType: "html",
 			contentType: "text/html;charset=UTF-8",
 			success: function (data) {
-				$("#"+id).append(data); 
-				$("#newDiagnose").hide();
+				$.fancybox({
+			        'content' : data,
+			        onCleanup: function() { 
+						$("#actCaseno").val('');
+			        }
+				});
 				$("#actCaseno").val(id);
-				$("#newDiagForm").slideDown();
 			}
 		});
-		diagFormIsShown=true;
-	} else {
-		$.alert({
-			    title: 'Neue Diagnose',
-			    content: "Das Diagnose-Formular ist bereits ge&ouml;ffnet bitte dieses zuerst schlie&szlig;en!",
-			    confirm: function(){}
-			});
-	}
 }
 
 function cancelUpload(caseno) {
@@ -330,8 +325,8 @@ function refreshPortrait(){
 
 </script>
 <div id="menuBar" style="width:90%; margin:auto; margin-top:20px;">
-	<span class="link" id="back">Zur&uuml;ck</span> | 
-	<span class="link" id="newVisit">Neuer Besuch</span> |
+	<span class="link" id="back">Zur&uuml;ck</span> 
+	<span class="link" id="newVisit">Neuer Besuch</span>
 	<span class="link" id="compareFoto">Foto Abgleich</span>
 </div>
 <div id="ajaxLoader"><img src="pictures/ajax-loader.gif" /></div>

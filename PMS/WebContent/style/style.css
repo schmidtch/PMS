@@ -16,10 +16,10 @@
 body {
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
-	font-family: Calibri;
+	font-family: Verdana;
 	font-size: 14px;
 	text-align: justify;
-	color: #000;
+	color: #3D3D3D;
 	min-height: 100%; /* Mindesth�he f�r moderne Browser */
 	height: auto !important; /* Important Regel f�r moderne Browser */
 	height: 100%; /* Mindesth�he f�r den IE */
@@ -55,14 +55,15 @@ a {
 }
 
 h1 {
-	color: #444;
+	font-family: 'BebasNeueRegular', Arial, Helvetica, sans-serif;
+    text-shadow: 0 0 5px #00c6ff;
+	color: #fff;
 	background-color: transparent;
-	font-size: 28px;
+	font-size: 36px;
 	font-weight: normal;
 	width: 33%;
 	padding-left:20px;
-	margin-top:0;
-	padding-top:0;
+	float:left;
 }
 
 h2, h3{
@@ -90,22 +91,37 @@ h3 {
 
 div#applicationContainer {
 	margin: 10px;
-	border: 1px solid #D0D0D0;
+	/*border: 1px solid #D0D0D0;
 	-webkit-box-shadow: 0 0 8px #D0D0D0;
-	padding-bottom:10px;
+	padding-bottom:10px;*/
 	/*display:none;*/
+	background: #feffff;
+	background: -moz-linear-gradient(-75deg, #feffff 51%,#feffff 63%,#ddf1f9 83%,#5cc9ff 100%);
+	background: -webkit-linear-gradient(-75deg, #feffff 51%,#feffff 63%,#ddf1f9 83%,#5cc9ff 100%);
+	background: linear-gradient(165deg, #feffff 51%,#feffff 63%,#ddf1f9 83%,#5cc9ff 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feffff', endColorstr='#5cc9ff',GradientType=1 );
 }
 div#head {
-	background-color:#C5E8FF;
+	/*background-color:#C5E8FF;*/
+	background: #63B8EE;
+  	background: linear-gradient(top,  #C5E8FF,  #5CC9FF);
+  	background: -ms-linear-gradient(top,  #C5E8FF,  #5CC9FF);
+  	background: -webkit-gradient(linear, left top, left bottom, from(#C5E8FF), to(#5CC9FF));
+  	background: -moz-linear-gradient(top,  #C5E8FF,  #5CC9FF);
 	padding-bottom:14px;
 	padding-top:14px;
 }
 div#menu {
 	height: 30px;
-	border-bottom: 1px solid #D0D0D0;
+	/*border-bottom: 1px solid #D0D0D0;
 	border-top: 1px solid #D0D0D0;
 	-webkit-box-shadow: 0 0 8px #D0D0D0;
-	background-color:#88D0FF;
+	background-color:#88D0FF;*/
+  background: #468CCF;
+  background: linear-gradient(top,  #5CC9FF,  #C5E8FF);
+  background: -ms-linear-gradient(top,  #5CC9FF,  #C5E8FF);
+  background: -webkit-gradient(linear, left top, left bottom, from(#5CC9FF), to(#C5E8FF));
+  background: -moz-linear-gradient(top,  #5CC9FF,  #C5E8FF);
 } 
 div#menu ul {
 	list-style: none;
@@ -120,13 +136,13 @@ div#menu ul li {
 	padding-top: 4px;
 	text-align: center;
 	padding-bottom: 6px;
-	border-right: 1px solid #D0D0D0;
+	/*border-right: 1px solid #D0D0D0;*/
 	width: 130px;
 	float: left;
 	cursor:pointer;
 }
 div#menu ul li:hover{
-	background-color:#C5E8FF;
+	border-bottom:2px solid;
 }
 form fieldset {
 	width:316px;
@@ -147,27 +163,31 @@ form input {
 	margin-bottom:1px;
 }
 table.tablesorter {
-       font-family:arial;
+       font-family:verdana;
        background-color: #CDCDCD;
        margin:auto;
-       font-size: 8pt;
        width: 90%;
        text-align: left;
 }
 table.tablesorter tr:hover td{
 	cursor:pointer;
-	background-color:#C5E8FF;
+  background: #E8F2FF;	
 }
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
        /*background-color: #e6EEEE;*/
-       background-color: #C5E8FF;
-       border: 1px solid #FFF;
-       font-size: 8pt;
+  	background: linear-gradient(top,  #C5E8FF,  #5CC9FF);
+  	background: -ms-linear-gradient(top,  #C5E8FF,  #5CC9FF);
+  	background: -webkit-gradient(linear, left top, left bottom, from(#C5E8FF), to(#5CC9FF));
+  	background: -moz-linear-gradient(top,  #C5E8FF,  #5CC9FF);
+       /*border: 1px solid #FFF;*/
        padding: 4px;
        width:25%;
 }
 table.tablesorter thead tr .header {
-       background-image: url(../pictures/bg.gif);
+  	background: linear-gradient(top,  #C5E8FF,  #5CC9FF);
+  	background: -ms-linear-gradient(top,  #C5E8FF,  #5CC9FF);
+  	background: -webkit-gradient(linear, left top, left bottom, from(#C5E8FF), to(#5CC9FF));
+  	background: -moz-linear-gradient(top,  #C5E8FF,  #5CC9FF);
        background-repeat: no-repeat;
        background-position: center right;
        cursor: pointer;
@@ -199,8 +219,9 @@ div#bars{
 	margin-bottom:10px;
 }
 div#searchbar{
-	height:20px;
+	height:30px;
 	margin-bottom:10px;
+	margin-top:10px;
 }
 div#searchbar div{
 	float:left;
@@ -211,11 +232,6 @@ div#searchbar div input{
 }
 div#searchbar {
 	display:none;
-}
-span.menu{
-	color:BLUE;
-	cursor:pointer;
-	text-decoration: underline;
 }
 span.headline{
 	width:120px;
@@ -235,14 +251,45 @@ div#dataContainer{
 	margin:auto;
 	padding-top:10px;
 }
-span.link{
+/*span.link{
 	color:BLUE;
 	text-decoration:underline;
 	cursor:pointer;
 }
 span.link:hover{
 	color:ORANGE;
+}*/
+span.link {
+  font-family: verdana;
+  color: #3D3D3D !important;
+  font-size: 12px;
+  box-shadow: 1px 1px 1px #BEE2F9;
+  padding: 5px 12px;
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
+  border-radius: 7px;
+  /*border: 2px solid #737373;
+  background: #63B8EE;
+  background: linear-gradient(top,  #EEEBF0,  #BABABA);
+  background: -ms-linear-gradient(top,  #EEEBF0,  #BABABA);
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEEBF0), to(#BABABA));
+  background: -moz-linear-gradient(top,  #EEEBF0,  #BABABA);*/
+  background: #63B8EE;
+  background: linear-gradient(top,  #C5E8FF,  #5CC9FF);
+  background: -ms-linear-gradient(top,  #C5E8FF,  #5CC9FF);
+  background: -webkit-gradient(linear, left top, left bottom, from(#C5E8FF), to(#5CC9FF));
+  background: -moz-linear-gradient(top,  #C5E8FF,  #5CC9FF);
+  cursor:pointer;
 }
+span.link:hover {
+  color: #14396A !important;
+  background: #468CCF;
+  background: linear-gradient(top,  #5CC9FF,  #C5E8FF);
+  background: -ms-linear-gradient(top,  #5CC9FF,  #C5E8FF);
+  background: -webkit-gradient(linear, left top, left bottom, from(#5CC9FF), to(#C5E8FF));
+  background: -moz-linear-gradient(top,  #5CC9FF,  #C5E8FF);
+}
+
 div.diagnoseContainer, div.serviceContainer, div#ajaxLoader{
 	display:none;
 }
@@ -286,6 +333,11 @@ div.serviceInnerWrapper{
 }
 div.uploadContainer, div.fotoContainer{
 	display:none;
+}
+div.fotoContainer{
+	text-align:center;
+	padding-top:5px;
+	padding-bottom:5px;
 }
 div.uploadContainer {
 	width:500px;
@@ -334,4 +386,10 @@ div#persondataContainer{
 }
 img#portrait{
 	width:200px;
+}
+div.visitMenuContainer{
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:40px;
+	height:20px;
 }

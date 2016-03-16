@@ -44,7 +44,7 @@ public class Visit {
 		Properties pvisit = new Properties();
 		
 		if(!this.diagnosis.isEmpty()){
-			diagButton = "<span class=\"link showDiagnosis\">Diagnose Anzeigen</span> | ";
+			diagButton = "<span class=\"link showDiagnosis\">Diagnose Anzeigen</span>";
 			for(Diagnose d : this.diagnosis) {
 				diagContent += d.toHTMLBlock();
 			}
