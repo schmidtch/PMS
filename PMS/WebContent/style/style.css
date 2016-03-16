@@ -23,6 +23,12 @@ body {
 	min-height: 100%; /* Mindesth�he f�r moderne Browser */
 	height: auto !important; /* Important Regel f�r moderne Browser */
 	height: 100%; /* Mindesth�he f�r den IE */
+	background: #feffff;
+	background: -moz-linear-gradient(-75deg, #feffff 51%,#feffff 63%,#ddf1f9 83%,#5cc9ff 100%);
+	background: -webkit-linear-gradient(-75deg, #feffff 51%,#feffff 63%,#ddf1f9 83%,#5cc9ff 100%);
+	background: linear-gradient(165deg, #feffff 51%,#feffff 63%,#ddf1f9 83%,#5cc9ff 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feffff', endColorstr='#5cc9ff',GradientType=1 );
+	background-attachment: fixed;
 }
 
 div#loginContainer {
@@ -90,16 +96,11 @@ h3 {
 }
 
 div#applicationContainer {
-	margin: 10px;
-	/*border: 1px solid #D0D0D0;
+	/*margin: 10px;
+	border: 1px solid #D0D0D0;
 	-webkit-box-shadow: 0 0 8px #D0D0D0;
 	padding-bottom:10px;*/
 	/*display:none;*/
-	background: #feffff;
-	background: -moz-linear-gradient(-75deg, #feffff 51%,#feffff 63%,#ddf1f9 83%,#5cc9ff 100%);
-	background: -webkit-linear-gradient(-75deg, #feffff 51%,#feffff 63%,#ddf1f9 83%,#5cc9ff 100%);
-	background: linear-gradient(165deg, #feffff 51%,#feffff 63%,#ddf1f9 83%,#5cc9ff 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feffff', endColorstr='#5cc9ff',GradientType=1 );
 }
 div#head {
 	/*background-color:#C5E8FF;*/
@@ -108,8 +109,9 @@ div#head {
   	background: -ms-linear-gradient(top,  #C5E8FF,  #5CC9FF);
   	background: -webkit-gradient(linear, left top, left bottom, from(#C5E8FF), to(#5CC9FF));
   	background: -moz-linear-gradient(top,  #C5E8FF,  #5CC9FF);
-	padding-bottom:14px;
-	padding-top:14px;
+	position:fixed;
+	height:120px;
+	width:100%;
 }
 div#menu {
 	height: 30px;
@@ -122,7 +124,16 @@ div#menu {
   background: -ms-linear-gradient(top,  #5CC9FF,  #C5E8FF);
   background: -webkit-gradient(linear, left top, left bottom, from(#5CC9FF), to(#C5E8FF));
   background: -moz-linear-gradient(top,  #5CC9FF,  #C5E8FF);
+  position:fixed;
+  margin-top:120.4px;
+  width:100%;
 } 
+div#backContainer{
+	height:150px;
+}
+div#content{
+	padding-bottom:10px;
+}
 div#menu ul {
 	list-style: none;
 	padding: 0px;
@@ -300,10 +311,7 @@ div.diagnoseContainer{
 	padding:2px;
 }
 div.head{
-	float:left;
-	width:29%;
 	font-weight:bold;
-	border-right:1px solid #D0D0D0;
 }
 div.content{
 	width:70%;
@@ -335,6 +343,7 @@ div.uploadContainer, div.fotoContainer{
 	display:none;
 }
 div.fotoContainer{
+	width:600px;
 	text-align:center;
 	padding-top:5px;
 	padding-bottom:5px;
@@ -392,4 +401,9 @@ div.visitMenuContainer{
 	padding-bottom:5px;
 	padding-left:40px;
 	height:20px;
+}
+div.showDiagContainer{
+	width:400px;
+	height:200px;
+	overflow:auto;
 }

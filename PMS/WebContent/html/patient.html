@@ -56,34 +56,13 @@ $("#compareFoto").click(function(e){
         'content' : $("#chooseFotos").html()
     });
 });
-diagFormIsShown = false;
-var caseno = "";
+var caseno = '';
 $(".services").click(function(e){
-	if(!diagFormIsShown) {
-		var id = $(this).parent().attr('id');
-		if(caseno!="" && id!=caseno){
-			if($("#"+caseno+" .serviceContainer").css('display')=='block'){
-				$("#"+caseno+" .serviceContainer").hide();
-			}
-		}
-		var display = $("#"+id+" .serviceContainer").css('display');
-		if(display=='none'){
-			$("#"+id+" .serviceContainer").show();
-		} else if(display=='block') {
-			$("#"+id+" .serviceContainer").hide();
-		}
-		if(caseno==id){
-			caseno="";
-		} else {
-			caseno=id;
-		}
-	} else {
-		$.alert({
-			    title: 'Neue Diagnose',
-			    content: "Das Diagnose-Formular ist ge&ouml;ffnet! Bitte dieses zuerst schlie&szlig;en!",
-			    confirm: function(){}
-			});
-	}
+	var id = $(this).parent().attr('id');
+	$.fancybox({
+        'content' :$("#"+id+" .serviceContainer").html()
+	});
+	caseno = '';
 });
 
 $("div.serviceContainer input.saveServices").click(function(e){
@@ -110,35 +89,23 @@ $("div.serviceContainer input.saveServices").click(function(e){
 			    title: 'Leistungen Speichern',
 			    content: content,
 			    confirm: function(){
-			    	$("#"+caseno+" .serviceContainer").hide();
-			    	caseno="";
+			    	$.fancybox.close();
+			    	caseno='';
 			    }
 			});
 		}
 	});
 });
 
-oldEl = undefined;
 $(".showDiagnosis").click(function(e){
-	if(!diagFormIsShown) {
-		$("div.diagnoseContainer").hide();
-		el = $(this).parent().find("div.diagnoseContainer");
-		if(oldEl==undefined){
-			$(el).show();
-			oldEl = el;
-		} else if($(oldEl).text()!=$(el).text()){
-			$(el).show();
-			oldEl = el;
-		} else {
-			oldEl=undefined;
-		}
-	} else {
-		$.alert({
-			    title: 'Neue Diagnose',
-			    content: "Das Diagnose-Formular ist ge&ouml;ffnet! Bitte dieses zuerst schlie&szlig;en!",
-			    confirm: function(){}
-			});
-	}
+	var cont = '<div class="showDiagContainer"><h3 style="width:100%; text-align:center;">Diagnosen</h3>';
+	$(this).parent().find("div.diagnoseContainer").each(function(e){
+		cont+=$(this).html();
+	});
+	cont+='</div>';
+	$.fancybox({
+        'content' : cont
+	});
 });
 $(".exportHonoranote").click(function(e){
 	var caseno = $(this).parent().attr('id');
@@ -190,33 +157,34 @@ $(".showFotos").click(function(){
 	var caseno = $(this).parent().attr('id');
 	resultEl = $("#"+caseno+"_showFotoContainer");
 	actEl = $(this);
-	if(resultEl.html()!="") {
-		resultEl.hide();
-		resultEl.html("<br />");
-		actEl.html("Show");
-	} else {
-		$.ajax({
-		    crossDomain: true,
-		    type: "POST",
-		    url: "foto/showF", 
-		    contentType: "application/json",
-		    dataType: "json",
-		    data: JSON.stringify({caseno : caseno})
-		}).done(function (data) {
-			if(data.state=="success") {
-				var anz = data.anz;
-			    actEl.html("Hide");
-			    var j=0;
-			    for(j=0; j<anz; j++){
-			    	resultEl.append('<img src="data:image/jpg;base64,' + data['pic_'+j] + '" style="width:300px;" />');
-			    	resultEl.append('<br />');
-			    }
-			    resultEl.show();
-			} else if (data.state=="error"){
-				alert(data.msg);
-			}
-		});
-	}
+	$.ajax({
+	    crossDomain: true,
+	    type: "POST",
+	    url: "foto/showF", 
+	    contentType: "application/json",
+	    dataType: "json",
+	    data: JSON.stringify({caseno : caseno})
+	}).done(function (data) {
+		if(data.state=="success") {
+			var anz = data.anz;
+		    resultEl.html("<br />");
+		    var j=0;	
+		    for(j=0; j<anz; j++){
+		    	resultEl.append('<img src="data:image/jpg;base64,' + data['pic_'+j] + '" style="width:300px;" />');
+		    	resultEl.append('<br />');
+		    }
+		    $.fancybox({
+		        'content' : '<div class="fotoContainer" style="display:block;">'+$(resultEl).html()+'</div>',
+		        onCleanup: function() {}
+			});
+		} else if (data.state=="error"){
+			$.alert({
+			    title: 'Fotos!',
+			    content: data.msg,
+			    confirm: function(){}
+			});
+		}
+	});
 });
 $('input[type=file]').change(function(e){
 	var parId = $(this).parent().parent().attr('id');

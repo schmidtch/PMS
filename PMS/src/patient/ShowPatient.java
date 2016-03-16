@@ -105,7 +105,7 @@ public class ShowPatient {
 						sex="male";
 					} else if (p.getSex().equals("F")){
 						sex="female";
-					}
+					}	
 					pic = "<img id=\"portrait\" src=\"pictures/"+sex+".png\" name=\"PatientIcon\" />";
 				}
 				pr.put("$portrait", pic);
