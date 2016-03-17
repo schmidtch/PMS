@@ -110,6 +110,15 @@ public class ShowPatient {
 				}
 				pr.put("$portrait", pic);
 				
+				ArrayList<IImage> tungs = iic.getTungImages(p.getPatId());
+				String fotoChoose =  "";
+				
+				if(!tungs.isEmpty()){
+					for (IImage img : tungs){
+						
+					}
+				}
+				pr.put("$foto_choose", fotoChoose);
 				
 				sr.setReplacements(pr);
 				response.put("data",sr.replaceInFile(this.getClass().getResource("../../../html/patient.html").getPath()));

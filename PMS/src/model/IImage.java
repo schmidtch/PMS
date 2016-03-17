@@ -16,6 +16,8 @@ public class IImage {
 	private File imgFile;
 	private byte[] imgBytes;
 	private InputStream is;
+	private String visitdate;
+	private int caseno;
 	
 	public IImage(){}
 	
@@ -90,9 +92,21 @@ public class IImage {
 	public void setIs(InputStream is) {
 		this.is = is;
 	}
-	
-	
-	
-	
+
+	public String getVisitdate() {
+		return visitdate;
+	}
+
+	public void setVisitdate(String visitdate) {
+		this.visitdate = visitdate;
+	}
+
+	public int getCaseno() {
+		return caseno;
+	}
+
+	public void setCaseno(int caseno) {
+		this.caseno = caseno;
+	}
 	
 }
