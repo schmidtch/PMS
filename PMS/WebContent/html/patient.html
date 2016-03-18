@@ -200,6 +200,12 @@ $('input[type=file]').change(function(e){
         };
 	}
 });
+
+$("#chooseFotos").click(function(e){
+	
+});
+
+
 function uploadFoto(caseno) {
 	var file = $('#upload_'+caseno);
 	var files = file[0].files;
@@ -331,11 +337,13 @@ function refreshPortrait(){
 	<br style="clear:both;" />
 	
 	<div id="chooseFotos" style="display:none">
-	    <label>Linkes Foto:</label><select><option>==Bitte wählen==</option>$foto_choose</select>
-	    <label>Rechtes Foto:</label><select><option>==Bitte wählen==</option>$foto_choose</select>
+	    <label>Linkes Foto:</label><select><option value="none">==Bitte wählen==</option>$foto_choose</select>
+	    <label>Rechtes Foto:</label><select><option value="none">==Bitte wählen==</option>$foto_choose</select>
 	</div>
 
-
+	<div id="fotoHiddenContainer" style="display:none;">
+		$fotos
+	</div>
 	
 	
 </div>

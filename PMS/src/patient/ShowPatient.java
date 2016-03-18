@@ -111,13 +111,15 @@ public class ShowPatient {
 				pr.put("$portrait", pic);
 				
 				ArrayList<IImage> tungs = iic.getTungImages(p.getPatId());
-				String fotoChoose =  "";
+				String fotoChoose =  "", fotoHidden="";
 				
 				if(!tungs.isEmpty()){
 					for (IImage img : tungs){
-						
+						fotoChoose += "<option value=\""+String.valueOf(img.getId())+"\">"+img.getVisitdate()+"</option>";
+						fotoHidden += "<img id=\""+String.valueOf(img.getId())+"\" src=\"data:image/jpg;base64,"+ img.getImg() +"\" />";
 					}
 				}
+				pr.put("$fotos", fotoHidden);
 				pr.put("$foto_choose", fotoChoose);
 				
 				sr.setReplacements(pr);
