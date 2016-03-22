@@ -201,10 +201,34 @@ $('input[type=file]').change(function(e){
 	}
 });
 
-$("#chooseFotos").click(function(e){
-	
-});
-
+var oldLeft = '';
+var oldRight = '';
+function getSelectedPic(el){
+	var id = $(el).find(":selected").val();
+	var idSelect = $(el).attr('id');
+	alert(id);
+	if(id=='none') {
+		if(idSelect=='left'){
+			oldLeft='';
+			$("#leftPic").html("");
+		} else if(idSelect=='right'){
+			oldRight='';
+			$("#rightPic").html("");
+		}
+	} else {
+		var x = $("#"+id);
+		if(idSelect=='left'){
+			$("#leftPic").html(x);
+			alert($("#leftPic").html());
+			oldLeft=el;
+			$("#right").remove($(oldLeft).attr('id'));
+		} else if(idSelect=='right'){
+			$("#rightPic").html(x);
+			oldRight=el;
+			$("#left").remove($(oldRight).attr('id'));
+		}
+	}
+}
 
 function uploadFoto(caseno) {
 	var file = $('#upload_'+caseno);
@@ -337,8 +361,12 @@ function refreshPortrait(){
 	<br style="clear:both;" />
 	
 	<div id="chooseFotos" style="display:none">
-	    <label>Linkes Foto:</label><select><option value="none">==Bitte wählen==</option>$foto_choose</select>
-	    <label>Rechtes Foto:</label><select><option value="none">==Bitte wählen==</option>$foto_choose</select>
+	    <label>Linkes Foto:</label><select id="left" onChange="javascript:getSelectedPic(this)"><option value="none">==Bitte wählen==</option>$foto_choose</select>
+	    <label>Rechtes Foto:</label><select id="right"><option value="none">==Bitte wählen==</option>$foto_choose</select>
+	    <div id="fotoShownContainer">
+	    	<div id="leftPic"></div>
+	    	<div id="rightPic"></div>
+	    </div>
 	</div>
 
 	<div id="fotoHiddenContainer" style="display:none;">
