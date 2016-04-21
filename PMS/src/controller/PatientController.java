@@ -37,7 +37,8 @@ public class PatientController {
 		stmt.execute("Insert into Contact (TELEFON, EMAIL, SVNR, BIRTHDATE) values ('"+c.getTelefon()+"', '"+c.getEmail()+"', "+p.getSVNR()+", STR_TO_DATE('"+p.getBirthdate()+"', '%d.%m.%Y'))");
 		stmt.close();
 		String folder = p.getName()+"_"+p.getGivenname()+"_"+p.getSVNR();
-		new File("/Volumes/Daten/PMS/data/patients/"+folder+"/scans").mkdirs();
+		new File("/home/christopher/Dokumente/PMS/patients/"+folder+"/scans").mkdirs();//"/Volumes/Daten/PMS/data/patients/"+folder+"/scans").mkdirs();
+		new File("/home/christopher/Dokumente/PMS/patients/"+folder+"/honorarnote").mkdirs();
 		DBConnectionHandler.closeConnection();
 		
 	}

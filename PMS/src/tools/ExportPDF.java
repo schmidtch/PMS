@@ -24,7 +24,7 @@ public class ExportPDF {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String exportPDF(String input) throws IOException{
+	public String exportPDF(String input) {
 		JSONObject in = new JSONObject(input);
 		JSONObject response = new JSONObject();
 		
@@ -36,10 +36,14 @@ public class ExportPDF {
 		Patient p = new Patient(pid);
 		String status="error", error="";
 		try {
-			if(pdfManager.createPDF(d, p)){
-				status="success";
-			} else {
-				error="Patient sind keine Leistungen zugeordnet!";
+			try {
+				if(pdfManager.createPDF(d, p)){
+					status="success";
+				} else {
+					error="Patient sind keine Leistungen zugeordnet!";
+				}
+			} catch (IOException e) {
+				error=e.getMessage();
 			}
 		} catch (SQLException | IllegalArgumentException e) {
 			error=e.getMessage();

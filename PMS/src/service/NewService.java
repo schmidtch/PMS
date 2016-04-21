@@ -25,7 +25,7 @@ public class NewService {
 		JSONObject response = new JSONObject();
 		ServiceController sc = new ServiceController();
 		Service s = new Service();
-		int caseno = Integer.parseInt(in.getString("caseno"));
+		int caseno = in.getInt("caseno");
 		String status="success", msg="";
 		String inServices = in.getString("selectedServices");
 		if("0".equals(inServices) || inServices.length()==0) {
@@ -33,6 +33,7 @@ public class NewService {
 			msg="Keine Leistungen gewählt!";
 		} else {
 			if(inServices.indexOf(";")>-1){
+				try{sc.clearServicesForVisit(caseno);}catch(SQLException e){status="error";msg=e.getMessage();}
 				String[] services = inServices.split(";",-1);
 				for(int i=0; i<services.length-1; i++){
 					s.setServiceCatalogueId(Integer.parseInt(services[i]));

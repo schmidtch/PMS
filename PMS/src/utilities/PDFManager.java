@@ -32,7 +32,7 @@ public class PDFManager {
 	private int fontHeight = 12;
 	private int lineHeight = fontHeight+3;
 
-	private String filePath = "/Users/chris/Desktop/";
+	private String filePath = "/home/christopher/Dokumente/PMS/patients/";
 
 	public PDFManager() {
 		
@@ -59,6 +59,7 @@ public class PDFManager {
 	        ArrayList<Diagnose> diagnosis = dco.getDiagnosisForVisit(new Visit(d.getCaseno()));
 	        d.setTitle("Honorarnote_"+String.valueOf(p.getPatId())+"_"+String.valueOf(d.getCaseno())+"_"+String.valueOf(p.getSVNR())+"-"+new SimpleDateFormat("MMddSSssyyyy").format(new Date())+".pdf");
 	        d.setComment("Dokument fuer "+p.getGivenname()+" "+p.getName() + " am " + new SimpleDateFormat("yyyyMMdd").format(new Date()));
+	        filePath += p.getName()+"_"+p.getGivenname()+"_"+p.getSVNR()+"/honorarnote/";
 	        
 	        int id = dc.findDocument(d);
 	        

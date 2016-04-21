@@ -15,13 +15,15 @@ public class ServiceController {
 	
 	public void insertServiceForVisit(int caseno, Service s) throws SQLException{
 		Statement stmt = DBConnectionHandler.getConnection().createStatement();
-		ResultSet rs = stmt.executeQuery("select count(*) as anzahl from Service where caseno="+String.valueOf(caseno)+" and service_catalogue_id="+s.getServiceCatalogueId());
-		if (rs.next()) {
-			if(rs.getInt("anzahl")==0){
-				stmt.executeUpdate("Insert into Service (caseno, Service_Catalogue_id) values ("+String.valueOf(caseno)+", "+s.getServiceCatalogueId()+");");
-			}
-		}
-		rs.close();
+		stmt.executeUpdate("Insert into Service (caseno, Service_Catalogue_id) values ("+String.valueOf(caseno)+", "+s.getServiceCatalogueId()+");");
+		stmt.close();
+		DBConnectionHandler.closeConnection();
+	}
+	
+
+	public void clearServicesForVisit(int caseno) throws SQLException{
+		Statement stmt = DBConnectionHandler.getConnection().createStatement();
+		stmt.executeUpdate("Delete from Service where caseno="+String.valueOf(caseno));
 		stmt.close();
 		DBConnectionHandler.closeConnection();
 	}

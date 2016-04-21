@@ -49,12 +49,12 @@ public class Visit {
 				diagContent += d.toHTMLBlock();
 			}
 		}
-		
 		if(!this.services.isEmpty()) {
 			for (Service s : this.services) {
-				pchecked.put("$leistung_"+s.getServiceCatalogueId()+"_checked", "checked");
+				pchecked.put("$leistung_"+s.getServiceCatalogueId()+"_checked", "checked=\"checked\"");
 			}
-		}
+		} 
+		
 		sr.setReplacements(pchecked);
 		
 		if(serviceCatalogueHTML.length()==0){
@@ -63,6 +63,7 @@ public class Visit {
 			serviceCatalogueHTML = sr.replaceInString(serviceCatalogueHTML);
 			p.put("$services", serviceCatalogueHTML);
 		}
+		p.put("$caseno",String.valueOf(this.caseno));
 		sr.setReplacements(p);
 		printServices = sr.replaceInFile(this.getClass().getResource("../../../html/service.html").getPath());
 		

@@ -60,15 +60,34 @@ var caseno = '';
 $(".services").click(function(e){
 	var id = $(this).parent().attr('id');
 	$.fancybox({
-        'content' :$("#"+id+" .serviceContainer").html()
+        'content' :$("#"+id+" .serviceContainer").html(),
+        onCleanup: function() { 
+	    	$("#"+id+" .serviceContainer").html($("#fancybox-inner").html());    
+        }
 	});
+    $("#"+id+" .serviceContainer").html("");
 	caseno = '';
 });
 
-$("div.serviceContainer input.saveServices").click(function(e){
+function refreshChecked(id){
+	var selectedServices = ";";
+	$('#serviceInnerWrapper_'+id+' input:checked').each(function() {
+		selectedServices += $(this).val()+";";
+	});
+	$('#serviceInnerWrapper_'+id+' input[type=checkbox]').each(function(){
+		if(selectedServices.indexOf(";"+$(this).val()+";")==-1){
+			$(this).attr('checked', false);
+		} else {
+			$(this).attr('checked', true);
+		}
+	});
+}
+
+//$("div.serviceContainer input.saveServices").click(function(e){
+function saveService(caseno){
 	var selectedServices = "";
-	$('div#'+caseno+' div.serviceContainer input:checked').each(function() {
-    	selectedServices += $(this).val()+";";
+	$('#serviceInnerWrapper_'+caseno+' input:checked').each(function() {
+		selectedServices += $(this).val()+";";
 	});
 	services = JSON.stringify({caseno : caseno, selectedServices : selectedServices});
 	
@@ -89,13 +108,15 @@ $("div.serviceContainer input.saveServices").click(function(e){
 			    title: 'Leistungen Speichern',
 			    content: content,
 			    confirm: function(){
+			    	refreshChecked(caseno);
 			    	$.fancybox.close();
 			    	caseno='';
 			    }
 			});
 		}
 	});
-});
+	
+}
 
 $(".showDiagnosis").click(function(e){
 	var cont = '<div class="showDiagContainer"><h3 style="width:100%; text-align:center;">Diagnosen</h3>';
