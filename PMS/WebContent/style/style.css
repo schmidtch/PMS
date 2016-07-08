@@ -411,3 +411,46 @@ div#fotoShownContainer{
 	width:100%;
 	height:100%;
 }
+div#fotoShownBig{
+	width:100%;
+	height:80%;
+}
+/*div#chooseFotosContainer{
+	width:1024px;
+	height:768px;
+}*/
+div#fotoBarContainer{
+	height:15%;
+	text-align:center;
+	clear:both;
+	border:1px solid;
+}
+div.leftPicContainer{
+	float:left;
+	width:49%;
+	text-align:center;
+	height:100%;
+	border:1px solid;
+}
+div.rightPicContainer{
+	marign-left:5px;
+	float:right;
+	text-align:center;
+	width:49%;
+	height:100%;
+	border: 1px solid;
+}
+span.bildBeschriftung{
+	background-color: silver;
+    background-color: hsla(0, 0%, 100%, 0.5);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left:0;
+    line-height: 2em;
+    text-align: center;
+}
+img.icon{
+	width:15px;
+	cursor:pointer;
+}

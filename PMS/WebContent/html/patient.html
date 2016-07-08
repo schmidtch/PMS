@@ -51,10 +51,65 @@ $("#back").click(function(){
 		}
 	});
 });
+var leftPic="", rightPic="";
 $("#compareFoto").click(function(e){
+	$("#chooseFotosContainer").css("height",window.innerHeight-150+"px");
+	$("#chooseFotosContainer").css("width", window.innerWidth-150+"px");
 	$.fancybox({
-        'content' : $("#chooseFotos").html()
+        'content' : $("#chooseFotos").html(),
+        onCleanup: function() { 
+	    	$("#chooseFotos").html($("#fancybox-inner").html());    
+        }
     });
+	$("#chooseFotos").html("");
+	//.comparePic
+	$(".comparePic").draggable();
+
+	$(".leftPicContainer").droppable( {
+	      drop: function( event, ui ) {
+	    	  if(leftPic!=""){
+	    		  $("#fotoBarContainer").append($("#"+leftPic));
+	    		  $("#"+leftPic).css("width", "100px");
+	    	  }
+	    	  leftPic=ui.draggable.attr('id');
+	    	  $(".leftPicContainer").html($(ui.draggable));
+	          $("#"+ui.draggable.attr('id')).css("top", "0");
+	          $("#"+ui.draggable.attr('id')).css("left", "0");
+	          $("#"+ui.draggable.attr('id')).css("width", "100%");
+	          $("#"+ui.draggable.attr('id')).css("max-height", "100%");
+	          $("#"+ui.draggable.attr('id')+" img").css("max-height", $("#"+ui.draggable.attr('id')).css("height"));
+	        }
+	});
+	$(".rightPicContainer").droppable( {
+		drop: function( event, ui ) {
+	    	  if(rightPic!=""){
+	    		  $("#fotoBarContainer").append($("#"+rightPic));
+	    		  $("#"+rightPic).css("width", "100px");
+	    	  }
+	    	  rightPic=ui.draggable.attr('id');
+	    	  $(".rightPicContainer").html($(ui.draggable));
+	          $("#"+ui.draggable.attr('id')).css("top", "0");
+	          $("#"+ui.draggable.attr('id')).css("left", "0");
+	          $("#"+ui.draggable.attr('id')).css("width", "100%");
+	          $("#"+ui.draggable.attr('id')).css("max-height", "100%");	
+	          $("#"+ui.draggable.attr('id')+" img").css("max-height", $("#"+ui.draggable.attr('id')).css("height"));
+	        }
+	});
+	$("#fotoBarContainer").droppable({
+		drop: function(event, ui){
+			if(rightPic==ui.draggable.attr('id')){
+				$("#fotoBarContainer").append($("#"+rightPic));
+				$("#"+rightPic).css("width", "100px");
+				rightPic="";
+			} else if(leftPic==ui.draggable.attr('id')){
+				$("#fotoBarContainer").append($("#"+leftPic));
+				$("#"+leftPic).css("width", "100px");
+				leftPic="";
+			}
+	        $("#"+ui.draggable.attr('id')).css("top", "0");
+	        $("#"+ui.draggable.attr('id')).css("left", "0");
+		}
+	});
 });
 var caseno = '';
 $(".services").click(function(e){
@@ -68,6 +123,11 @@ $(".services").click(function(e){
     $("#"+id+" .serviceContainer").html("");
 	caseno = '';
 });
+
+function handleDropEvent( event, ui ) {
+  var draggable = ui.draggable;
+  alert( 'The square with ID "' + draggable.attr('id') + '" was dropped onto me!' );
+}
 
 function refreshChecked(id){
 	var selectedServices = ";";
@@ -221,6 +281,41 @@ $('input[type=file]').change(function(e){
         };
 	}
 });
+$('img.edit').click(function(e){
+	var parId = $(this).parent().parent().attr('id');
+	var headline = [];
+	var iH = 0, iC=0;
+	var content = [];
+	$("#"+parId).find("span").each(function(e){
+		var x = "";
+		if($(this).attr('class')=='headline'){
+			headline[iH]=$(this).html().toLowerCase().substring(0, $(this).html().length-2);
+			iH++;
+		} else {
+			content[iC]=$(this).html();
+			iC++;
+		}
+	});
+	var i;
+	var json = "{ \"svnr\" : \""+$("#svnr").html()+"\", \"gebdat\" : \""+$("#gebdat").html()+"\", ";
+	for(i=0; i<iH; i++){
+		json += "\""+headline[i]+"\"" + " : " + "\""+content[i]+"\"";
+		if(i<iH-1){
+			json += ", ";
+		}
+	}
+	json += " }";
+	$.ajax({
+	    crossDomain: true,
+	    type: "POST",
+	    url: "patient/updateAddress", 
+	    contentType: "application/json",
+	    dataType: "json",
+	    data: json
+	}).done(function (data) {
+		alert(data.state);
+	});
+});
 
 var oldLeft = '';
 var oldRight = '';
@@ -361,16 +456,16 @@ function refreshPortrait(){
 				<span class="headline">Geburtsdatum: </span><span id="gebdat">$gebdat</span>
 			</div>
 			<div id="address">
-				<h3>Adresse:</h3>
-				<span class="headline">Stra&szlig;e: </span><span>$street</span><br />
-				<span class="headline">PLZ: </span><span>$zip</span><br />
-				<span class="headline">Ort: </span><span>$location</span><br />
-				<span class="headline">Staat: </span><span>$country</span>
+				<h3>Adresse: <img id="editAddress" src="pictures/edit.ico" class="icon edit" /></h3>
+				<span class="headline">Stra&szlig;e: </span><span class="content">$street</span><br />
+				<span class="headline">PLZ: </span><span class="content">$zip</span><br />
+				<span class="headline">Ort: </span><span class="content">$location</span><br />
+				<span class="headline">Staat: </span><span class="content">$country</span>
 			</div>
 			<div id="contact">
-				<h3>Kontakt:</h3>
-				<span class="headline">Telefon: </span><span>$telefon</span><br />
-				<span class="headline">Email: </span><span>$email</span>
+				<h3>Kontakt: <img id="editContact" src="pictures/edit.ico" class="icon edit" /></h3>
+				<span class="headline">Telefon: </span><span class="content">$telefon</span><br />
+				<span class="headline">Email: </span><span class="content">$email</span>
 			</div>
 		</div>
 	</div>
@@ -382,17 +477,21 @@ function refreshPortrait(){
 	<br style="clear:both;" />
 	
 	<div id="chooseFotos" style="display:none">
-	    <label>Linkes Foto:</label><select id="left" onChange="javascript:getSelectedPic(this)"><option value="none">==Bitte wählen==</option>$foto_choose</select>
-	    <label>Rechtes Foto:</label><select id="right"><option value="none">==Bitte wählen==</option>$foto_choose</select>
-	    <div id="fotoShownContainer">
-	    	<div id="leftPic"></div>
-	    	<div id="rightPic"></div>
-	    </div>
+		<div id="chooseFotosContainer">
+		    <div id="fotoShownBig">
+		    	<div class="leftPicContainer">
+		    		
+		    	</div>
+		    	<div class="rightPicContainer">
+		    		
+		    	</div>
+		    </div> 
+			<div id="fotoBarContainer">
+				$fotos
+			</div>
+		</div>
 	</div>
 
-	<div id="fotoHiddenContainer" style="display:none;">
-		$fotos
-	</div>
 	
 	
 </div>

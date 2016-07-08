@@ -88,6 +88,15 @@ public class PatientController {
 		
 		return pList;
 	}
+	
+	public void updatePatientAddress() throws SQLException{
+		
+		Statement stmt = DBConnectionHandler.getConnection().createStatement();
+		stmt.executeQuery("update Address set street='"+a.getStreet()+", ' where svnr="+String.valueOf(this.p.getSVNR())+" and birthdate=STR_TO_DATE('"+this.p.getBirthdate()+"', '%d.%m.%Y')");
+		stmt.close();
+		DBConnectionHandler.closeConnection();
+		
+	}
 
 	public void setpList(ArrayList<Patient> pList) {
 		this.pList = pList;
