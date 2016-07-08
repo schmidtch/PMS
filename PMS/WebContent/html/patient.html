@@ -293,10 +293,14 @@ $('img.edit').click(function(e){
 			iH++;
 		} else {
 			content[iC]=$(this).html();
+			$(this).html("<input type=\"text\" value=\""+content[iC]+"\" id=\"txt_"+headline[iC]+"\" />")
 			iC++;
 		}
 	});
-	var i;
+	$("#edit"+parId).hide();
+	$("#save"+parId).show();
+	$("#close"+parId).show();
+	/*var i;
 	var json = "{ \"svnr\" : \""+$("#svnr").html()+"\", \"gebdat\" : \""+$("#gebdat").html()+"\", ";
 	for(i=0; i<iH; i++){
 		json += "\""+headline[i]+"\"" + " : " + "\""+content[i]+"\"";
@@ -305,6 +309,8 @@ $('img.edit').click(function(e){
 		}
 	}
 	json += " }";
+	
+	
 	$.ajax({
 	    crossDomain: true,
 	    type: "POST",
@@ -314,7 +320,14 @@ $('img.edit').click(function(e){
 	    data: json
 	}).done(function (data) {
 		alert(data.state);
-	});
+	});*/
+});
+
+$("img.close").click(function(e){
+	var parId = $(this).parent().parent().attr('id');
+	$("#edit"+parId).show();
+	$("#save"+parId).hide();
+	$("#close"+parId).hide();
 });
 
 var oldLeft = '';
@@ -455,15 +468,15 @@ function refreshPortrait(){
 				<span class="headline">SVNR: </span><span id="svnr">$svnr</span><br />
 				<span class="headline">Geburtsdatum: </span><span id="gebdat">$gebdat</span>
 			</div>
-			<div id="address">
-				<h3>Adresse: <img id="editAddress" src="pictures/edit.ico" class="icon edit" /></h3>
+			<div id="Address">
+				<h3>Adresse: <img id="editAddress" src="pictures/edit.ico" class="icon edit" /> <img id="saveAddress" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closeAddress" src="pictures/close.ico" class="icon close" style="display:none;" /></h3>
 				<span class="headline">Stra&szlig;e: </span><span class="content">$street</span><br />
 				<span class="headline">PLZ: </span><span class="content">$zip</span><br />
 				<span class="headline">Ort: </span><span class="content">$location</span><br />
 				<span class="headline">Staat: </span><span class="content">$country</span>
 			</div>
-			<div id="contact">
-				<h3>Kontakt: <img id="editContact" src="pictures/edit.ico" class="icon edit" /></h3>
+			<div id="Contact">
+				<h3>Kontakt: <img id="editContact" src="pictures/edit.ico" class="icon edit" /> <img id="saveContact" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closeContact" src="pictures/close.ico" class="icon close" style="display:none;" /></h3>
 				<span class="headline">Telefon: </span><span class="content">$telefon</span><br />
 				<span class="headline">Email: </span><span class="content">$email</span>
 			</div>
