@@ -281,11 +281,14 @@ $('input[type=file]').change(function(e){
         };
 	}
 });
+var iH = 0, iC=0;
+var headline = [];
+var content = [];
 $('img.edit').click(function(e){
+	headline = [];
+	content = [];
+	iH = 0, iC = 0;
 	var parId = $(this).parent().parent().attr('id');
-	var headline = [];
-	var iH = 0, iC=0;
-	var content = [];
 	$("#"+parId).find("span").each(function(e){
 		var x = "";
 		if($(this).attr('class')=='headline'){
@@ -293,17 +296,45 @@ $('img.edit').click(function(e){
 			iH++;
 		} else {
 			content[iC]=$(this).html();
-			$(this).html("<input type=\"text\" value=\""+content[iC]+"\" id=\"txt_"+headline[iC]+"\" />")
+			$(this).html("<input type=\"text\" value=\""+content[iC]+"\" id=\"txt_"+headline[iC]+"\" />");
 			iC++;
 		}
 	});
-	$("#edit"+parId).hide();
+	$(".edit").hide();
 	$("#save"+parId).show();
 	$("#close"+parId).show();
-	/*var i;
+});
+
+$("img.close").click(function(e){
+	var parId = $(this).parent().parent().attr('id');
+	i=0;
+	$(".edit").show();
+	$("#save"+parId).hide();
+	$("#close"+parId).hide();
+	$("#"+parId).find("span").each(function(e){
+		if($(this).attr('class')=="content"){
+			$(this).html(content[i]);
+			i++;
+		}
+	});
+	
+});
+var nContent = [];
+$("img.save").click(function(e){
+	var parId = $(this).parent().parent().attr('id');
+	var iC=0;
+	$("#"+parId).find("span").each(function(e){
+		var x = "";
+		if($(this).attr('class')=='content'){
+			nContent[iC]=$(this).find("input").val();
+			iC++;
+		}
+	})
+	
+	var i;
 	var json = "{ \"svnr\" : \""+$("#svnr").html()+"\", \"gebdat\" : \""+$("#gebdat").html()+"\", ";
 	for(i=0; i<iH; i++){
-		json += "\""+headline[i]+"\"" + " : " + "\""+content[i]+"\"";
+		json += "\""+headline[i]+"\"" + " : " + "\""+nContent[i]+"\"";
 		if(i<iH-1){
 			json += ", ";
 		}
@@ -314,20 +345,28 @@ $('img.edit').click(function(e){
 	$.ajax({
 	    crossDomain: true,
 	    type: "POST",
-	    url: "patient/updateAddress", 
+	    url: "patient/update"+parId, 
 	    contentType: "application/json",
 	    dataType: "json",
 	    data: json
 	}).done(function (data) {
-		alert(data.state);
-	});*/
-});
-
-$("img.close").click(function(e){
-	var parId = $(this).parent().parent().attr('id');
-	$("#edit"+parId).show();
-	$("#save"+parId).hide();
-	$("#close"+parId).hide();
+		if(data.state=="success"){
+			alert("Erfolgreich gespeichert!");
+			content = nContent;
+		} else if(data.state="error") {
+			alert("Ein Fehler ist aufgetreten: "+data.error);
+		}
+		i=0;
+		$("#"+parId).find("span").each(function(e){
+			if($(this).attr('class')=="content"){
+				$(this).html(content[i]);
+				i++;
+			}
+		});
+		$(".edit").show();
+		$("#save"+parId).hide();
+		$("#close"+parId).hide();
+	});
 });
 
 var oldLeft = '';
@@ -463,20 +502,20 @@ function refreshPortrait(){
 		$portrait
 		</div>
 		<div id="persondataContainer">
-			<div id="persondata">
-				<h3>$patientsName</h3>
-				<span class="headline">SVNR: </span><span id="svnr">$svnr</span><br />
-				<span class="headline">Geburtsdatum: </span><span id="gebdat">$gebdat</span>
+			<div id="Persondata">
+				<h3><img id="editPersondata" src="pictures/edit.ico" class="icon edit" /> <img id="savePersondata" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closePersondata" src="pictures/close.ico" class="icon close" style="display:none;" /> $patientsName</h3>
+				<span class="headline">SVNR: </span><span class="content" id="svnr">$svnr</span><br />
+				<span class="headline">Geburtsdatum: </span><span class="content" id="gebdat">$gebdat</span>
 			</div>
 			<div id="Address">
-				<h3>Adresse: <img id="editAddress" src="pictures/edit.ico" class="icon edit" /> <img id="saveAddress" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closeAddress" src="pictures/close.ico" class="icon close" style="display:none;" /></h3>
+				<h3><img id="editAddress" src="pictures/edit.ico" class="icon edit" /> <img id="saveAddress" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closeAddress" src="pictures/close.ico" class="icon close" style="display:none;" /> Adresse:</h3>
 				<span class="headline">Stra&szlig;e: </span><span class="content">$street</span><br />
 				<span class="headline">PLZ: </span><span class="content">$zip</span><br />
 				<span class="headline">Ort: </span><span class="content">$location</span><br />
 				<span class="headline">Staat: </span><span class="content">$country</span>
 			</div>
 			<div id="Contact">
-				<h3>Kontakt: <img id="editContact" src="pictures/edit.ico" class="icon edit" /> <img id="saveContact" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closeContact" src="pictures/close.ico" class="icon close" style="display:none;" /></h3>
+				<h3><img id="editContact" src="pictures/edit.ico" class="icon edit" /> <img id="saveContact" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closeContact" src="pictures/close.ico" class="icon close" style="display:none;" /> Kontakt:</h3>
 				<span class="headline">Telefon: </span><span class="content">$telefon</span><br />
 				<span class="headline">Email: </span><span class="content">$email</span>
 			</div>

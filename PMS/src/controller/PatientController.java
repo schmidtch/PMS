@@ -92,7 +92,16 @@ public class PatientController {
 	public void updatePatientAddress() throws SQLException{
 		
 		Statement stmt = DBConnectionHandler.getConnection().createStatement();
-		stmt.executeQuery("update Address set street='"+a.getStreet()+", ' where svnr="+String.valueOf(this.p.getSVNR())+" and birthdate=STR_TO_DATE('"+this.p.getBirthdate()+"', '%d.%m.%Y')");
+		stmt.execute("update Address set street='"+a.getStreet()+"', streetnr="+a.getStreetnumber()+", location='"+a.getLocation()+"', zip="+a.getZip()+", country='"+a.getCountry()+"' where svnr="+String.valueOf(this.p.getSVNR())+" and birthdate=STR_TO_DATE('"+this.p.getBirthdate()+"', '%d.%m.%Y')");
+		stmt.close();
+		DBConnectionHandler.closeConnection();
+		
+	}
+	
+	public void updatePatientContact() throws SQLException{
+		
+		Statement stmt = DBConnectionHandler.getConnection().createStatement();
+		stmt.execute("update Contact set telefon='"+c.getTelefon()+"', email='"+c.getEmail()+"' where svnr="+String.valueOf(this.p.getSVNR())+" and birthdate=STR_TO_DATE('"+this.p.getBirthdate()+"', '%d.%m.%Y')");
 		stmt.close();
 		DBConnectionHandler.closeConnection();
 		

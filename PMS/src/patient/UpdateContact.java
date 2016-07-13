@@ -12,11 +12,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import controller.PatientController;
-import model.Adress;
+import model.Contact;
 import model.Patient;
 
-@Path("/updateAddress")
-public class UpdateAddress {
+@Path("/updateContact")
+public class UpdateContact {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -26,18 +26,15 @@ public class UpdateAddress {
 		try {
 			JSONObject jo = new JSONObject(input);
 			Patient p = new Patient();
-			Adress a = new Adress();
-			a.setCountry(jo.getString("staat"));
-			a.setLocation(jo.getString("ort"));
-			a.setStreet(jo.getString("straße").split(" ")[0]);
-			a.setStreetnumber(Integer.parseInt(jo.getString("straße").split(" ")[1]));
-			a.setZip(Integer.parseInt(jo.getString("plz")));
-			p.setAdress(a);
+			Contact c = new Contact();
+			c.setEmail(jo.getString("email"));
+			c.setTelefon(jo.getString("telefon"));
+			p.setContact(c);
 			p.setBirthdate(jo.getString("gebdat"));
 			p.setSVNR(Integer.parseInt(jo.getString("svnr")));
 			PatientController pc = new PatientController(p);
 			pc.setPatient(p);
-			pc.updatePatientAddress();
+			pc.updatePatientContact();
 			resp.put("state", "success");
 		} catch (JSONException e) {
 			resp.put("state", "error");
