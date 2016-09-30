@@ -68,7 +68,7 @@ public class ShowPatient {
 			p = new PatientController(p).getPatientBySVNRBirthdate();
 			if(p!=null){
 				pr.put("$pid", String.valueOf(p.getPatId()));
-				pr.put("$patientsName", p.getGivenname() + " " + p.getGivenname2() + " " + p.getName());
+				pr.put("$patientsName", "<span class=\"pData\" id=\"givenname\">"+p.getGivenname() +"</span> <span class=\"pData\" id=\"givenname2\">" + p.getGivenname2() + "</span> <span class=\"pData\" id=\"name\">" + p.getName()+ "</span>");
 				pr.put("$svnr", String.valueOf(p.getSVNR()));
 				pr.put("$gebdat", p.getBirthdate());
 				pr.put("$street", p.getAdress().getStreet() + " " + String.valueOf(p.getAdress().getStreetnumber()));
@@ -78,6 +78,7 @@ public class ShowPatient {
 				pr.put("$telefon", p.getContact().getTelefon());
 				pr.put("$email", p.getContact().getEmail());
 				ArrayList<Visit> visits = new VisitController().getVisitsForPatient(p);
+				IImageController iic = new IImageController();
 				String visitsData = "";
 				if(visits.isEmpty()){
 					visitsData = "Keine Besuche vorhanden!";
@@ -86,20 +87,20 @@ public class ShowPatient {
 					String serviceCatalogue = sca.getCatalogueAsHTML();
 					if(serviceCatalogue.length()==0){
 						serviceCatalogue = "Kein Leistungs-Katalog vorhanden!";
-					} 
+					}
 					for (Visit v : visits) {
+						if(iic.getAllImagesForVisit(v.getCaseno()).isEmpty()) v.fotosAktiv="link_inactiv";
 						v.setServiceCatalogueHTML(serviceCatalogue);
 						v.setNumberService(sca.getNumberOfService());
 						visitsData += v.toHTMLParagraph();
 					}
 				}
 				pr.put("$visits", visitsData);
-				IImageController iic = new IImageController();
 				String pic="", sex="";
 				IImage ii = iic.getPatientPortrait(p.getPatId());
 				
 				if(ii!=null){
-					pic = "<img id=\"portrait\" src=\"data:image/jpg;base64,"+ ii.getImg() +"\" style=\"width:200px;\" />";
+					pic = "<img id=\"portrait\" src=\"data:image/jpg;base64,"+ ii.getImg() +"\" style=\"height:250px;\" />";
 				} else {
 					if(p.getSex().equals("M")){
 						sex="male";
@@ -110,17 +111,6 @@ public class ShowPatient {
 				}
 				pr.put("$portrait", pic);
 				
-				ArrayList<IImage> tungs = iic.getTungImages(p.getPatId());
-				String fotoChoose =  "", fotos="";
-				
-				if(!tungs.isEmpty()){
-					for (IImage img : tungs){
-						fotoChoose += "<option value=\""+String.valueOf(img.getId())+"\">"+img.getVisitdate()+"</option>";
-						fotos += "<div class=\"comparePic\" style=\"width:100px; margin:auto;margin-right:5px; float:left;\" id=\"comparePic"+String.valueOf(img.getId())+"\"><img style=\"max-width:100%; margin:auto; max-height:80%; display:block;\" src=\"data:image/jpg;base64,"+ img.getImg() +"\" /><span class=\"bildBeschriftung\">"+img.getVisitdate()+"</span></div>";
-					}
-				}
-				pr.put("$fotos", fotos);
-				pr.put("$foto_choose", fotoChoose);
 				
 				sr.setReplacements(pr);
 				response.put("data",sr.replaceInFile(this.getClass().getResource("../../../html/patient.html").getPath()));

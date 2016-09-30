@@ -106,7 +106,29 @@ public class PatientController {
 		DBConnectionHandler.closeConnection();
 		
 	}
+	
+	public void updatePatientPersonData() throws SQLException{
+		
+		Statement stmt = DBConnectionHandler.getConnection().createStatement();
+		stmt.execute("update Person set name='"+p.getName()+"', givenname='"+p.getGivenname()+"', givenname2='"+p.getGivenname2()+"' where svnr="+String.valueOf(this.p.getSVNR())+" and birthdate=STR_TO_DATE('"+this.p.getBirthdate()+"', '%d.%m.%Y')");
+		stmt.close();
+		DBConnectionHandler.closeConnection();
+		
+	}
 
+	public void updatePatient(String oldSVNR, String oldBirthdate) throws SQLException{
+		
+		Statement stmt = DBConnectionHandler.getConnection().createStatement();
+		stmt.execute("insert into Person values('"+p.getSVNR()+"', STR_TO_DATE('"+p.getBirthdate()+"', '%d.%m.%Y'), '"+p.getName()+"', '"+p.getGivenname()+"', '', '"+p.getGivenname2()+"', (select p.sex from Person p where p.svnr="+String.valueOf(oldSVNR)+" and p.birthdate=STR_TO_DATE('"+oldBirthdate+"', '%d.%m.%Y')), '')");
+		stmt.execute("update Contact set svnr="+String.valueOf(this.p.getSVNR())+", birthdate=STR_TO_DATE('"+this.p.getBirthdate()+"', '%d.%m.%Y') where svnr="+String.valueOf(oldSVNR)+" and birthdate=STR_TO_DATE('"+oldBirthdate+"', '%d.%m.%Y')");
+		stmt.execute("update Address set svnr="+String.valueOf(this.p.getSVNR())+", birthdate=STR_TO_DATE('"+this.p.getBirthdate()+"', '%d.%m.%Y') where svnr="+String.valueOf(oldSVNR)+" and birthdate=STR_TO_DATE('"+oldBirthdate+"', '%d.%m.%Y')");
+		stmt.execute("update Patient set svnr="+String.valueOf(this.p.getSVNR())+", birthdate=STR_TO_DATE('"+this.p.getBirthdate()+"', '%d.%m.%Y') where svnr="+String.valueOf(oldSVNR)+" and birthdate=STR_TO_DATE('"+oldBirthdate+"', '%d.%m.%Y')");
+		stmt.execute("delete from Person where svnr="+String.valueOf(oldSVNR)+" and birthdate=STR_TO_DATE('"+oldBirthdate+"', '%d.%m.%Y')");
+		stmt.close();
+		DBConnectionHandler.closeConnection();
+		
+	}
+	
 	public void setpList(ArrayList<Patient> pList) {
 		this.pList = pList;
 	}	

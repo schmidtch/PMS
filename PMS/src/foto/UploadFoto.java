@@ -1,6 +1,9 @@
 package foto;
 
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
 
+import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,6 +34,9 @@ import controller.IImageController;
 @Path("/upload")
 public class UploadFoto {
 
+	private final static double P_HEIGHT = 300.0;
+	private final static double A_HEIGHT = 768.0;
+	
 	
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -50,8 +57,21 @@ public class UploadFoto {
 			filePart = form.getField("file_"+String.valueOf(i));
 			descPart = form.getField("description_"+String.valueOf(i));
 			headerOfFilePart = filePart.getContentDisposition();
-				
-			inStream = filePart.getValueAs(InputStream.class);
+			BufferedImage bi = filePart.getValueAs(BufferedImage.class);
+			if(descPart.getValue().equals("portrait")){
+				bi = resizeImage(bi, bi.getType(), P_HEIGHT);
+			} else {
+				bi = resizeImage(bi, bi.getType(), A_HEIGHT);
+				//inStream = filePart.getValueAs(InputStream.class);
+			}
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			try {
+				ImageIO.write(bi, "jpg", os);
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			inStream = new ByteArrayInputStream(os.toByteArray());
 			try {
 	
 				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -110,6 +130,16 @@ public class UploadFoto {
 		
 		
 	}
-	
+	private static BufferedImage resizeImage(BufferedImage originalImage, int type, double newHeight){
+		double ratio = (double)originalImage.getHeight()/newHeight;
+		int width = (int)(originalImage.getWidth()/ratio);
+		BufferedImage resizedImage = new BufferedImage(width, (int)newHeight, type);
+		Graphics2D g = resizedImage.createGraphics();
+		g.drawImage(originalImage, 0, 0, width, (int)newHeight, null);
+		g.dispose();
+
+		return resizedImage;
+	}
+
 	
 }

@@ -23,7 +23,15 @@ $("#newPatient").submit(function(event){
 		var responseText = msg.state;
 		if(responseText=="success"){
 			alert("Patient erfolgreich hinzugefügt!");
-			location.href="/PMS/";
+			$.ajax({
+		        type: "GET",
+		        url: "patient/show",
+		        dataType: "html",
+		        contentType: "text/html;charset=UTF-8",
+		        success: function (data) {
+		           $("#content").html(data);
+		        }
+		    });
 		} else {
 			alert(msg.error);
 		}		

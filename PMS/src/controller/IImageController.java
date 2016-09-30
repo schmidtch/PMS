@@ -45,7 +45,7 @@ public class IImageController {
 		IImage ii = null;
 		
 		Statement stmt = DBConnectionHandler.getConnection().createStatement();
-		ResultSet rs = stmt.executeQuery("select i.* from Images i, Visit v where i.description='portrait' and v.patid="+String.valueOf(pid)+" and v.caseno=i.caseno order by v.caseno desc;");
+		ResultSet rs = stmt.executeQuery("select i.* from Images i, Visit v where i.description='portrait' and v.patid="+String.valueOf(pid)+" and v.caseno=i.caseno order by i.imageid desc;");
 		if (rs.next()) {
 			ii = new IImage(rs);
 		}

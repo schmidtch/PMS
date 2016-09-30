@@ -1,4 +1,31 @@
 <script>
+$(document).ready(function(e){
+	var pid = $("#pid").val();
+	$.ajax({
+		type: "POST",
+		url: "foto/gettungs",
+		dataType: "json",
+		contentType: "application/json; charset=utf-8",
+		data : JSON.stringify({ patid : pid }),
+		success: function (resp) {
+			if(resp.state=="success"){
+				if(resp.fotos=="yes") {
+					$("#chooseFotos").html(resp.data).promise().done(function(){ 
+						$("#compareFoto").removeClass("link_inactiv"); 
+						$("#compareFoto").addClass("link"); 
+					});
+				}
+			} else {
+				/*$.alert({
+				    title: 'Error while loading Tung-Pictures',
+				    content: resp.data,
+				    confirm: function(){}
+				});*/
+				$("#chooseFotos").html(resp.data);
+			}
+		}
+	});
+});
 $("#newVisit").click(function(e){
 	var svnr = $("#svnr").text();
 	var gebdat = $("#gebdat").text();
@@ -21,6 +48,9 @@ $("#newVisit").click(function(e){
 					success: function (resp) {
 						if(resp.msg=="success"){
 							$("#content").html(resp.data);
+							var caseno = $("div #visitsContainer div.visit").first().attr('id');
+							$("#"+caseno+"Menu").show();
+							$("#"+caseno+"Menu").parent().find("img").attr('src', 'pictures/action_right.png');
 						} else {
 							$.alert({
 							    title: 'Fehler',
@@ -53,67 +83,69 @@ $("#back").click(function(){
 });
 var leftPic="", rightPic="";
 $("#compareFoto").click(function(e){
-	$("#chooseFotosContainer").css("height",window.innerHeight-150+"px");
-	$("#chooseFotosContainer").css("width", window.innerWidth-150+"px");
-	$.fancybox({
-        'content' : $("#chooseFotos").html(),
-        onCleanup: function() { 
-	    	$("#chooseFotos").html($("#fancybox-inner").html());    
-        }
-    });
-	$("#chooseFotos").html("");
-	//.comparePic
-	$(".comparePic").draggable();
-
-	$(".leftPicContainer").droppable( {
-	      drop: function( event, ui ) {
-	    	  if(leftPic!=""){
-	    		  $("#fotoBarContainer").append($("#"+leftPic));
-	    		  $("#"+leftPic).css("width", "100px");
-	    	  }
-	    	  leftPic=ui.draggable.attr('id');
-	    	  $(".leftPicContainer").html($(ui.draggable));
-	          $("#"+ui.draggable.attr('id')).css("top", "0");
-	          $("#"+ui.draggable.attr('id')).css("left", "0");
-	          $("#"+ui.draggable.attr('id')).css("width", "100%");
-	          $("#"+ui.draggable.attr('id')).css("max-height", "100%");
-	          $("#"+ui.draggable.attr('id')+" img").css("max-height", $("#"+ui.draggable.attr('id')).css("height"));
+	if($(this).attr('class')=="link") {
+		$("#chooseFotosContainer").css("height",window.innerHeight-150+"px");
+		$("#chooseFotosContainer").css("width", window.innerWidth-150+"px");
+		$.fancybox({
+	        'content' : $("#chooseFotos").html(),
+	        onCleanup: function() { 
+		    	$("#chooseFotos").html($("#fancybox-inner").html());    
 	        }
-	});
-	$(".rightPicContainer").droppable( {
-		drop: function( event, ui ) {
-	    	  if(rightPic!=""){
-	    		  $("#fotoBarContainer").append($("#"+rightPic));
-	    		  $("#"+rightPic).css("width", "100px");
-	    	  }
-	    	  rightPic=ui.draggable.attr('id');
-	    	  $(".rightPicContainer").html($(ui.draggable));
-	          $("#"+ui.draggable.attr('id')).css("top", "0");
-	          $("#"+ui.draggable.attr('id')).css("left", "0");
-	          $("#"+ui.draggable.attr('id')).css("width", "100%");
-	          $("#"+ui.draggable.attr('id')).css("max-height", "100%");	
-	          $("#"+ui.draggable.attr('id')+" img").css("max-height", $("#"+ui.draggable.attr('id')).css("height"));
-	        }
-	});
-	$("#fotoBarContainer").droppable({
-		drop: function(event, ui){
-			if(rightPic==ui.draggable.attr('id')){
-				$("#fotoBarContainer").append($("#"+rightPic));
-				$("#"+rightPic).css("width", "100px");
-				rightPic="";
-			} else if(leftPic==ui.draggable.attr('id')){
-				$("#fotoBarContainer").append($("#"+leftPic));
-				$("#"+leftPic).css("width", "100px");
-				leftPic="";
+	    });
+		$("#chooseFotos").html("");
+		//.comparePic
+		$(".comparePic").draggable();
+	
+		$(".leftPicContainer").droppable( {
+		      drop: function( event, ui ) {
+		    	  if(leftPic!=""){
+		    		  $("#fotoBarContainer").append($("#"+leftPic));
+		    		  $("#"+leftPic).css("width", "100px");
+		    	  }
+		    	  leftPic=ui.draggable.attr('id');
+		    	  $(".leftPicContainer").html($(ui.draggable));
+		          $("#"+ui.draggable.attr('id')).css("top", "0");
+		          $("#"+ui.draggable.attr('id')).css("left", "0");
+		          $("#"+ui.draggable.attr('id')).css("width", "100%");
+		          $("#"+ui.draggable.attr('id')).css("max-height", "100%");
+		          $("#"+ui.draggable.attr('id')+" img").css("max-height", $("#"+ui.draggable.attr('id')).css("height"));
+		        }
+		});
+		$(".rightPicContainer").droppable( {
+			drop: function( event, ui ) {
+		    	  if(rightPic!=""){
+		    		  $("#fotoBarContainer").append($("#"+rightPic));
+		    		  $("#"+rightPic).css("width", "100px");
+		    	  }
+		    	  rightPic=ui.draggable.attr('id');
+		    	  $(".rightPicContainer").html($(ui.draggable));
+		          $("#"+ui.draggable.attr('id')).css("top", "0");
+		          $("#"+ui.draggable.attr('id')).css("left", "0");
+		          $("#"+ui.draggable.attr('id')).css("width", "100%");
+		          $("#"+ui.draggable.attr('id')).css("max-height", "100%");	
+		          $("#"+ui.draggable.attr('id')+" img").css("max-height", $("#"+ui.draggable.attr('id')).css("height"));
+		        }
+		});
+		$("#fotoBarContainer").droppable({
+			drop: function(event, ui){
+				if(rightPic==ui.draggable.attr('id')){
+					$("#fotoBarContainer").append($("#"+rightPic));
+					$("#"+rightPic).css("width", "100px");
+					rightPic="";
+				} else if(leftPic==ui.draggable.attr('id')){
+					$("#fotoBarContainer").append($("#"+leftPic));
+					$("#"+leftPic).css("width", "100px");
+					leftPic="";
+				}
+		        $("#"+ui.draggable.attr('id')).css("top", "0");
+		        $("#"+ui.draggable.attr('id')).css("left", "0");
 			}
-	        $("#"+ui.draggable.attr('id')).css("top", "0");
-	        $("#"+ui.draggable.attr('id')).css("left", "0");
-		}
-	});
+		});
+	}
 });
 var caseno = '';
 $(".services").click(function(e){
-	var id = $(this).parent().attr('id');
+	var id = $(this).parent().parent().attr('id');
 	$.fancybox({
         'content' :$("#"+id+" .serviceContainer").html(),
         onCleanup: function() { 
@@ -160,19 +192,21 @@ function saveService(caseno){
 		success: function (data) {
 			var content = "";
 			if(data.status=="success"){
-				content="Erfolgreich gespeichert!";
+		    	$.fancybox.close();
+		    	refreshChecked(caseno);
+		    	caseno='';
 			} else {
 				content='Fehler beim verspeichern der Leistugen für den Patienten!<br />'+data.msg;
+				$.alert({
+				    title: 'Leistungen Speichern',
+				    content: content,
+				    confirm: function(){
+				    	$.fancybox.close();
+				    	caseno='';
+				    }
+				});
 			}
-			$.alert({
-			    title: 'Leistungen Speichern',
-			    content: content,
-			    confirm: function(){
-			    	refreshChecked(caseno);
-			    	$.fancybox.close();
-			    	caseno='';
-			    }
-			});
+			
 		}
 	});
 	
@@ -180,16 +214,19 @@ function saveService(caseno){
 
 $(".showDiagnosis").click(function(e){
 	var cont = '<div class="showDiagContainer"><h3 style="width:100%; text-align:center;">Diagnosen</h3>';
+	var text = '';
 	$(this).parent().find("div.diagnoseContainer").each(function(e){
-		cont+=$(this).html();
+		text+=$(this).html();
 	});
-	cont+='</div>';
-	$.fancybox({
-        'content' : cont
-	});
+	if(text!=''){
+		cont+=text+'</div>';
+		$.fancybox({
+	        'content' : cont
+		});
+	}
 });
 $(".exportHonoranote").click(function(e){
-	var caseno = $(this).parent().attr('id');
+	var caseno = $(this).parent().parent().parent().parent().attr('id');
 	var pid = $("#pid").val();
 	$.ajax({
 		type: "POST",
@@ -224,7 +261,7 @@ $(".exportHonoranote").click(function(e){
 	});
 });
 $(".importFoto").click(function(){
-	var caseno = $(this).parent().attr('id');
+	var caseno = $(this).parent().parent().parent().parent().attr('id');
 	$.fancybox({
         'content' : $("#"+caseno+"_uploadContainer").show(),
         onCleanup: function() { 
@@ -235,37 +272,39 @@ $(".importFoto").click(function(){
 	});
 });
 $(".showFotos").click(function(){
-	var caseno = $(this).parent().attr('id');
-	resultEl = $("#"+caseno+"_showFotoContainer");
-	actEl = $(this);
-	$.ajax({
-	    crossDomain: true,
-	    type: "POST",
-	    url: "foto/showF", 
-	    contentType: "application/json",
-	    dataType: "json",
-	    data: JSON.stringify({caseno : caseno})
-	}).done(function (data) {
-		if(data.state=="success") {
-			var anz = data.anz;
-		    resultEl.html("<br />");
-		    var j=0;	
-		    for(j=0; j<anz; j++){
-		    	resultEl.append('<img src="data:image/jpg;base64,' + data['pic_'+j] + '" style="width:300px;" />');
-		    	resultEl.append('<br />');
-		    }
-		    $.fancybox({
-		        'content' : '<div class="fotoContainer" style="display:block;">'+$(resultEl).html()+'</div>',
-		        onCleanup: function() {}
-			});
-		} else if (data.state=="error"){
-			$.alert({
-			    title: 'Fotos!',
-			    content: data.msg,
-			    confirm: function(){}
-			});
-		}
-	});
+	if($(this).attr('class').indexOf("inactiv")==-1) {
+		var caseno = $(this).parent().parent().attr('id');
+		resultEl = $("#"+caseno+"_showFotoContainer");
+		actEl = $(this);
+		$.ajax({
+		    crossDomain: true,
+		    type: "POST",
+		    url: "foto/showF", 
+		    contentType: "application/json",
+		    dataType: "json",
+		    data: JSON.stringify({caseno : caseno})
+		}).done(function (data) {
+			if(data.state=="success") {
+				var anz = data.anz;
+			    resultEl.html("<br />");
+			    var j=0;	
+			    for(j=0; j<anz; j++){
+			    	resultEl.append('<img src="data:image/jpg;base64,' + data['pic_'+j] + '" style="width:300px;" />');
+			    	resultEl.append('<br />');
+			    }
+			    $.fancybox({
+			        'content' : '<div class="fotoContainer" style="display:block;">'+$(resultEl).html()+'</div>',
+			        onCleanup: function() {}
+				});
+			} else if (data.state=="error"){
+				$.alert({
+				    title: 'Fotos!',
+				    content: data.msg,
+				    confirm: function(){}
+				});
+			}
+		});
+	}
 });
 $('input[type=file]').change(function(e){
 	var parId = $(this).parent().parent().attr('id');
@@ -276,7 +315,7 @@ $('input[type=file]').change(function(e){
         oFReader.readAsDataURL(files[i]);
         oFReader.onload = function (oFREvent) {
         	$("div#"+parId+" div.preview").append('<img src="'+oFREvent.target.result+'" name="preview_'+anz+'" style="width:150px;" /> ') ;
-        	$("div#"+parId+" div.preview").append('<select id="kategorie_'+anz+'"><option value="sonstige">Sonstige</option><option value="zunge">Zunge</option><option value="portrait">Patientenportrait</option></select><br />');
+        	$("div#"+parId+" div.preview").append('<select id="kategorie_'+anz+'"><option value="zunge">Zunge</option><option value="sonstige">Sonstige</option><option value="portrait">Patientenportrait</option></select><br />');
         	anz++;
         };
 	}
@@ -284,9 +323,11 @@ $('input[type=file]').change(function(e){
 var iH = 0, iC=0;
 var headline = [];
 var content = [];
+var personCont = [];
 $('img.edit').click(function(e){
 	headline = [];
 	content = [];
+	personCont = [];
 	iH = 0, iC = 0;
 	var parId = $(this).parent().parent().attr('id');
 	$("#"+parId).find("span").each(function(e){
@@ -294,12 +335,21 @@ $('img.edit').click(function(e){
 		if($(this).attr('class')=='headline'){
 			headline[iH]=$(this).html().toLowerCase().substring(0, $(this).html().length-2);
 			iH++;
-		} else {
+		} else if($(this).attr('class')=='content'){
 			content[iC]=$(this).html();
 			$(this).html("<input type=\"text\" value=\""+content[iC]+"\" id=\"txt_"+headline[iC]+"\" />");
 			iC++;
 		}
 	});
+	if(parId=="Persondata") {
+		personCont[0]=$("#givenname").html();
+		$("#givenname").html("<span class=\"headline\">Vorname:</span><input type=\"text\" value=\""+personCont[0]+"\" id=\"txt_givenname\" />");
+		personCont[1]=$("#givenname2").html();
+		$("#givenname2").html("<span class=\"headline\">Zweitname:</span><input type=\"text\" value=\""+personCont[1]+"\" id=\"txt_givenname2\" />");
+		personCont[2]=$("#name").html();
+		$("#name").html("<span class=\"headline\">Name:</span><input type=\"text\" value=\""+personCont[2]+"\" id=\"txt_name\" />");
+		$("<br />").insertAfter($("#closePersondata"));
+	}
 	$(".edit").hide();
 	$("#save"+parId).show();
 	$("#close"+parId).show();
@@ -317,30 +367,49 @@ $("img.close").click(function(e){
 			i++;
 		}
 	});
+	if(parId=="Persondata"){
+		$("#givenname").html(personCont[0]);
+		$("#givenname2").html(personCont[1]);
+		$("#name").html(personCont[2]);
+		$("#closePersondata").next("br").remove();
+	}
 	
 });
 var nContent = [];
 $("img.save").click(function(e){
 	var parId = $(this).parent().parent().attr('id');
-	var iC=0;
-	$("#"+parId).find("span").each(function(e){
-		var x = "";
-		if($(this).attr('class')=='content'){
-			nContent[iC]=$(this).find("input").val();
-			iC++;
+	var json = "{";
+	if(parId=="Persondata"){
+		var svnr = $("#txt_svnr").val();
+		var birthdate = $("#txt_geburtsdatum").val();
+		var givenname = $("#txt_givenname").val();
+		var givenname2 = $("#txt_givenname2").val();
+		var name = $("#txt_name").val();
+		var newPatient = "no";
+		if(svnr!=content[0] || birthdate!=content[1]){
+			newPatient = "yes";
+			json += "\"oldsvnr\" : \""+content[0]+"\", \"oldgebdat\" : \""+content[1]+"\", ";
 		}
-	})
-	
-	var i;
-	var json = "{ \"svnr\" : \""+$("#svnr").html()+"\", \"gebdat\" : \""+$("#gebdat").html()+"\", ";
-	for(i=0; i<iH; i++){
-		json += "\""+headline[i]+"\"" + " : " + "\""+nContent[i]+"\"";
-		if(i<iH-1){
-			json += ", ";
+		json += "\"svnr\" : \""+svnr+"\", \"gebdat\" : \""+birthdate+"\", \"newPatient\" : \""+newPatient+"\", \"givenname\" : \""+givenname+"\", \"givenname2\" : \""+givenname2+"\",  \"name\" : \""+name+"\" }";	
+	} else {
+		var iC=0;
+		$("#"+parId).find("span").each(function(e){
+			var x = "";
+			if($(this).attr('class')=='content'){
+				nContent[iC]=$(this).find("input").val();
+				iC++;
+			}
+		});
+		var i;
+		json += "\"svnr\" : \""+$("#svnr").html()+"\", \"gebdat\" : \""+$("#gebdat").html()+"\", ";
+		for(i=0; i<iH; i++){
+			json += "\""+headline[i]+"\"" + " : " + "\""+nContent[i]+"\"";
+			if(i<iH-1){
+				json += ", ";
+			}
 		}
+		json += " }";
 	}
-	json += " }";
-	
 	
 	$.ajax({
 	    crossDomain: true,
@@ -352,7 +421,15 @@ $("img.save").click(function(e){
 	}).done(function (data) {
 		if(data.state=="success"){
 			alert("Erfolgreich gespeichert!");
-			content = nContent;
+			if(parId=="Persondata"){
+				personCont[0] = $("#txt_givenname").val();
+				personCont[1] = $("#txt_givenname2").val();
+				personCont[2] = $("#txt_name").val();
+				content[0] = $("#txt_svnr").val();
+				content[1] = $("#txt_geburtsdatum").val();
+			} else {
+				content = nContent;
+			}
 		} else if(data.state="error") {
 			alert("Ein Fehler ist aufgetreten: "+data.error);
 		}
@@ -363,10 +440,28 @@ $("img.save").click(function(e){
 				i++;
 			}
 		});
+		if(parId=="Persondata"){
+			$("#givenname").html(personCont[0]);
+			$("#givenname2").html(personCont[1]);
+			$("#name").html(personCont[2]);
+			$("#closePersondata").next("br").remove();
+		}
 		$(".edit").show();
 		$("#save"+parId).hide();
 		$("#close"+parId).hide();
 	});
+	
+});
+
+$("img.showMenu").click(function(e){
+	var id = $(this).parent().parent().parent().attr('id');
+	if($("#"+id+"Menu").css('display')=="none"){
+		$(this).attr('src', 'pictures/action_right.png');
+		$("#"+id+"Menu").show();
+	} else {
+		$(this).attr('src', 'pictures/action_left.png');
+		$("#"+id+"Menu").hide();
+	}
 });
 
 var oldLeft = '';
@@ -420,15 +515,18 @@ function uploadFoto(caseno) {
 	  success : function(data) {
 	    var state = data.state;
 	    var msg = data.msg;
-	    if(state=="success"){}else if(state=="error") {}
-	    $.alert({
-			title: 'Foto-Upload',
-			content: msg,
-			confirm: function(){
-				$.fancybox.close();
-				refreshPortrait();
-			}
-		});
+	    if(state=="success"){
+			$.fancybox.close();
+			refreshPortrait();
+		}else if(state=="error") {
+		    $.alert({
+				title: 'Foto-Upload',
+				content: msg,
+				confirm: function(){
+					$.fancybox.close();
+				}
+			});
+		}
 	  },
 	  error : function(jqXHR, textStatus, errorThrown) {
 	    alert(textStatus);
@@ -493,7 +591,7 @@ function refreshPortrait(){
 <div id="menuBar" style="width:90%; margin:auto; margin-top:20px;">
 	<span class="link" id="back">Zur&uuml;ck</span> 
 	<span class="link" id="newVisit">Neuer Besuch</span>
-	<span class="link" id="compareFoto">Foto Abgleich</span>
+	<span class="link_inactiv" id="compareFoto">Foto Abgleich</span>
 </div>
 <div id="ajaxLoader"><img src="pictures/ajax-loader.gif" /></div>
 <div id="dataContainer">
@@ -522,26 +620,12 @@ function refreshPortrait(){
 		</div>
 	</div>
 	<div id="visitsContainer">
-		<h3>Besuche</h3>
-			$visits
+		$visits
 	</div>
 	<input type="hidden" id="pid" value="$pid" />
 	<br style="clear:both;" />
 	
 	<div id="chooseFotos" style="display:none">
-		<div id="chooseFotosContainer">
-		    <div id="fotoShownBig">
-		    	<div class="leftPicContainer">
-		    		
-		    	</div>
-		    	<div class="rightPicContainer">
-		    		
-		    	</div>
-		    </div> 
-			<div id="fotoBarContainer">
-				$fotos
-			</div>
-		</div>
 	</div>
 
 	

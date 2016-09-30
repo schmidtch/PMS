@@ -1,28 +1,35 @@
-<div class="visit">
-	<span id="$casenoTitle">Besuch am $visitdate</span>
-	<div id="$caseno" class="visitMenuContainer">
-		<span style="display:$hasAll;"><span class="link newDiagnose" onClick="javascript:getDiagForm('$caseno')">Neue Diagnose</span></span>
-		$diagButton
-		<span class="link services">Leistungen</span> 
-		<span class="link exportHonoranote">Honoranote</span> 
-		<span class="link importFoto">Foto</span> 
-		<span class="link showFotos">Show</span>
-		<br />
-		$printServicesdiagContent
-		<div id="$caseno_uploadContainer" class="uploadContainer">
-			<h3 style="text-align:center;">Foto für Besuch am $visitdate hochladen:</h3>
-			<p style="text-align:center;">
-				<label class="custom-file-input" for="upload_$caseno" ></label><br />
-				<input id="upload_$caseno" class="upload" type="file" multiple="multiple" name="_photos" accept="image/*" style="visibility: hidden">
-			</p>
-			<div class="preview"></div>
-			<br />
-			<!-- <input type="file" id="upload_$caseno" name="file" multiple="multiple" class="custom-file-input"/> -->
-			<p class="buttonBlock">
-				<input type="button" value="Speichern" onclick="javascript:uploadFoto($caseno)" />
-				<input type="button" value="Abbrechen" onclick="javascript:cancelUpload($caseno)" />
-			</p>
-		</div>
-		<div id="$caseno_showFotoContainer" class="fotoContainer"></div>
-	</div>
+<div class="visit" id="$caseno">
+        <h3>
+            <span id="$casenoTitle">Besuch am $visitdate</span>
+			<div style="float:right;">
+				<img src="pictures/action_left.png" style="height:30px;" class="showMenu" />
+				<div style="float:right; display:none;" id="$casenoMenu">
+					<span class="link newDiagnose" onClick="javascript:getDiagForm('$caseno')">Neue Diagnose</span>
+	                <span class="link importFoto">Upload</span>
+	                <span class="link exportHonoranote">Honoranote</span>           
+				</div>
+			</div>
+        </h3>
+        <div class="visitMenuContainer">
+                <span class="link services">Leistungen</span> 
+                <span class="$diagAktiv showDiagnosis">Diagnose Anzeigen</span> 
+                <span class="$fotoAktiv showFotos">Fotos Anzeigen</span>
+                <br />
+                $printServicesdiagContent
+                <div id="$caseno_uploadContainer" class="uploadContainer">
+                        <h3 style="text-align:center;">Foto für Besuch am $visitdate hochladen:</h3>
+                        <p style="text-align:center;">
+                                <label class="custom-file-input" for="upload_$caseno" ></label><br />
+                                <input id="upload_$caseno" class="upload" type="file" multiple="multiple" name="_photos" accept="image/*" style="visibility: hidden">
+                        </p>
+                        <div class="preview"></div>
+                        <br />
+                        <!-- <input type="file" id="upload_$caseno" name="file" multiple="multiple" class="custom-file-input"/> -->
+                        <p class="buttonBlock">
+                                <input type="button" value="Speichern" onclick="javascript:uploadFoto($caseno)" />
+                                <input type="button" value="Abbrechen" onclick="javascript:cancelUpload($caseno)" />
+                        </p>
+                </div>
+                <div id="$caseno_showFotoContainer" class="fotoContainer"></div>
+        </div>
 </div>

@@ -13,6 +13,7 @@ public class Visit {
 	private ArrayList<Service> services = new ArrayList<Service>();
 	private String serviceCatalogueHTML = "";
 	private int numberService=0;
+	public String fotosAktiv = "link";
 	
 	public Visit(){}
 
@@ -44,10 +45,12 @@ public class Visit {
 		Properties pvisit = new Properties();
 		
 		if(!this.diagnosis.isEmpty()){
-			diagButton = "<span class=\"link showDiagnosis\">Diagnose Anzeigen</span>";
+			diagButton = "link";
 			for(Diagnose d : this.diagnosis) {
 				diagContent += d.toHTMLBlock();
 			}
+		} else {
+			diagButton = "link_inactiv";
 		}
 		if(!this.services.isEmpty()) {
 			for (Service s : this.services) {
@@ -75,7 +78,8 @@ public class Visit {
 		pvisit.put("$caseno", String.valueOf(this.caseno));
 		pvisit.put("$hasAll", hasAll);
 		pvisit.put("$visitdate", visitdate);
-		pvisit.put("$diagButton", diagButton);
+		pvisit.put("$diagAktiv", diagButton);
+		pvisit.put("$fotoAktiv", fotosAktiv);
 		pvisit.put("$printServicesdiagContent", printServices+diagContent);
 		sr.setReplacements(pvisit);
 		
