@@ -1,78 +1,124 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<script>
-$("#newPatient").submit(function(event){
-	var name = $("#name").val();
-	var givenname = $("#givenname").val();
-	var givenname2 = $("#givenname2").val();
-	var title = $("#title").val();
-	var sex = $('input[name="sex"]:checked').val();
-	var birthname = $("#birthname").val();
-	var svnr = $("#svnr").val();
-	var birthdate = $("#birthdate").val();
-	patient = JSON.stringify({name : name, givenname : givenname, givenname2 : givenname2, title : title, sex : sex, birthname : birthname, svnr : svnr, birthdate : birthdate, adress : JSON.stringify({street : $("#street").val(), streetnumber : $("#steetnr").val(), zip : $("#zip").val(), location : $("#location").val(), country : $("#country").val()}), contact : JSON.stringify({telefon : $("#telefon").val(), email : $("#email").val() })});
-	$.ajax({
-		type : "POST",
-		url : "patient/new",
-		contentType : "application/json; charset=utf-8",
-		dataType : "json",
-		data : patient
-	}).done(function(msg) {
-		var responseText = msg.state;
-		if(responseText=="success"){
-			alert("Patient erfolgreich hinzugefügt!");
-			$.ajax({
-		        type: "GET",
-		        url: "patient/show",
-		        dataType: "html",
-		        contentType: "text/html;charset=UTF-8",
-		        success: function (data) {
-		           $("#content").html(data);
-		        }
-		    });
-		} else {
-			alert(msg.error);
-		}		
-	});	
-	return false;
-});
-</script>
-</head>
-<body>
-<h2>Neuer Patient</h2>
-<form id="newPatient" action="">
-	<fieldset>
-	  <legend>Name</legend>
-	  <label for="name">Name: </label><input type="text" id="name" required  /><br />
-	  <label for="givenname">Vorname: </label><input type="text" id="givenname" /><br />
-	  <label for="givenname2">Zweitname: </label><input type="text" id="givenname2" /><br />
-	  <label for="title">Titel: </label><input type="text" id="title" /><br />
-	  <label for="sex">Geschlecht: </label>
-	  	<label style="width:30px; padding-right:5px;">M&auml;nnlich</label><input type="radio" name="sex" value="M" style="float:left; width:50px; margin-top:3.5px;" id="sexM" />
-	  	<label style="width:30px; padding-right:5px;">Weiblich</label><input type="radio" name="sex" value="F" id="sexF" style="width:50px; padding-top:1px;"/><br style="clear:both;" />
-	  <label for="birthname">Geburtsname: </label><input type="text" id="birthname" /><br />
-	  <label for="ssnr">SVNR: </label><input type="text" id="svnr" required pattern="[0-9]{4}" title="Sozialversicherungsnummer muss eine 4-stellige Zahl sein." /><br />
-	  <label for="birthdate">Geburtsdatum: </label><input type="text" id="birthdate" title="Geburtsdaum muss in der Form 01.01.2000 sein." required pattern="^(31|30|0[1-9]|[12][0-9]|[1-9])\.(0[1-9]|1[012]|[1-9])\.((18|19|20)\d{2}|\d{2})$" /><br />
-	</fieldset>
-	<fieldset>
-	  <legend>Adresse</legend>
-	  <label for="street">Stra&szlig;e: </label><input type="text" id="street" /><br />
-	  <label for="streetnr">Haus Nr.: </label><input type="number" id="steetnr" /><br />
-	  <label for="zip">PLZ: </label><input type="text" id="zip" required pattern="[0-9]{4}" title="PLZ muss eine 4-stellige Zahl sein"/><br />
-	  <label for="location">Ort: </label><input type="text" id="location" /><br />
-	  <label for="country">Staat: </label><input type="text" id="country" /><br />	 
-	</fieldset>
-	<fieldset>
-	  <legend>Kontakt</legend>
-	  <label for="telefon">Telefon: </label><input type="tel" required pattern="[0-9]{4}/[0-9]{7}" id="telefon" /><br />
-	  <label for="email">Email: </label><input type="email" id="email" /><br />
-	</fieldset>
-	<fieldset style="text-align:right; margin-top:2px;">
-		<input type="submit" name="save" value="Speichern" style="width:100px; "/>
-		<input type="button" name="cancel" value="Abbrechen" style="width:100px;" />
-	</fieldset>
-</form>
-</body>
-</html>
+	<div class="container" style="width:60%;margin:auto;">
+		<div class="panel panel-primary">
+			<div class="panel-heading newPatientPanelMenu" id="name" onclick="changePanelMenu('name')">
+				<h2 class="panel-title">Neuer Patient</h2>
+			</div>
+			<div class="panel-body" id="namePanel">
+				<div class="form-group row">
+					<label for="name" class="col-sm-2 col-form-label">Name</label>
+			    	<div class="col-sm-10">
+			    		<input type="text" required class="form-control" id="name" placeholder="Nachname">
+				    </div>
+				</div>
+				<div class="form-group row">
+					<label for="givenname" class="col-sm-2 col-form-label">Vorname</label>
+				    <div class="col-sm-10">
+				    	<input type="text" required class="form-control" id="givenname" placeholder="Vorname">
+				    </div>
+				</div>
+				<div class="form-group row">
+					<label for="givenname2" class="col-sm-2 col-form-label">Zweitname</label>
+				    <div class="col-sm-10">
+				    	<input type="text" class="form-control" id="givenname2" placeholder="Zweitname">
+				    </div>
+				</div>
+				<div class="form-group row">
+					<label for="title" class="col-sm-2 col-form-label">Titel</label>
+				    <div class="col-sm-10">
+				    	<input type="text" class="form-control" id="title" placeholder="Titel">
+				    </div>
+				</div>
+				<div class="form-group row">
+					<label for="title" class="col-sm-2 col-form-label">Geschlecht</label>
+					   	<div class="col-sm-10">
+							<label class="radio-inline"><input type="radio" name="sex" value="M" id="sexM" >Männlich</label>
+							<label class="radio-inline"><input type="radio" name="sex" value="F" id="sexF" >Weiblich</label>
+						</div>
+				</div><!-- /.row -->
+				<div class="form-group row">
+					<label for="birthname" class="col-sm-2 col-form-label">Geburtsname</label>
+				    <div class="col-sm-10">
+				    	<input type="text" class="form-control" id="birthname" placeholder="Geburtsname">
+				    </div>
+				</div>
+				<div class="form-group row">
+					<label for="ssnr" class="col-sm-2 col-form-label">SVNR</label>
+				    <div class="col-sm-10">
+				    	<input type="text" required class="form-control" id="svnr" required pattern="[0-9]{4}" placeholder="SVNR" title="Sozialversicherungsnummer muss eine 4-stellige Zahl sein.">
+				    </div>
+				</div>			  
+				<div class="form-group row">
+					<label for="birthdate" class="col-sm-2 col-form-label">Geburtsdatum</label>
+				    <div class="col-sm-10">
+				    	<input type="text" required class="form-control" id="birthdate" placeholder="Geburtsdatum" title="Geburtsdaum muss in der Form 01.01.2000 sein." required pattern="^(31|30|0[1-9]|[12][0-9]|[1-9])\.(0[1-9]|1[012]|[1-9])\.((18|19|20)\d{2}|\d{2})$">
+				    </div>
+				</div>
+			</div>
+		</div>
+		<br />
+		<div class="panel panel-primary">
+			<div class="panel-heading newPatientPanelMenu" id="address" onclick="changePanelMenu('address')">
+				<h2 class="panel-title">Adresse</h2>
+			</div>
+			<div class="panel-body" id="addressPanel" style="display:none;">
+				<div class="form-group row">
+					<label for="street" class="col-sm-2 col-form-label">Straße</label>
+			    	<div class="col-sm-10">
+			    		<input type="text" class="form-control" id="street" placeholder="Straße">
+				    </div>
+				</div>
+				<div class="form-group row">
+					<label for="streetnr" class="col-sm-2 col-form-label">Haus Nr.</label>
+			    	<div class="col-sm-10">
+			    		<input type="number" class="form-control" id="streetnr" placeholder="10">
+				    </div>
+				</div>
+				<div class="form-group row">
+					<label for="zip" class="col-sm-2 col-form-label">PLZ</label>
+			    	<div class="col-sm-10">
+			    		<input type="text" pattern="[0-9]{4}" class="form-control" id="zip" title="PLZ muss eine 4-stellige Zahl sein." placeholder="9020">
+				    </div>
+				</div>
+				<div class="form-group row">
+					<label for="location" class="col-sm-2 col-form-label">Ort</label>
+			    	<div class="col-sm-10">
+			    		<input type="text" class="form-control" id="location" placeholder="Ort">
+				    </div>
+				</div>
+				<div class="form-group row">
+					<label for="country" class="col-sm-2 col-form-label">Staat</label>
+			    	<div class="col-sm-10">
+			    		<input type="text" class="form-control" id="country" placeholder="Staat">
+				    </div>
+				</div>
+			</div>
+		</div>
+		<br />
+		<div class="panel panel-primary">
+			<div class="panel-heading newPatientPanelMenu" onclick="changePanelMenu('kontakt')" id="kontakt">
+				<h2 class="panel-title">Kontakt</h2>
+			</div>
+			<div class="panel-body" style="display:none;" id="kontaktPanel">
+				<div class="form-group row">
+					<label for="telefon" class="col-sm-2 col-form-label">Telefon</label>
+			    	<div class="col-sm-10">
+			    		<input type="tel" class="form-control" required pattern="[0-9]{4}/[0-9]{7}" id="telefon" placeholder="0664/1234567">
+				    </div>
+				</div>
+				<div class="form-group row">
+					<label for="email" class="col-sm-2 col-form-label">Email</label>
+			    	<div class="col-sm-10">
+			    		<input type="email" class="form-control" id="email" placeholder="email@gmail.com">
+				    </div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="offset-sm-2 col-sm-12" style="text-align:right;">
+				<button type="button" id="cancel" class="btn btn-danger">Cancel</button>
+				<button type="button" id="savePatient" onclick="savePatient()" class="btn btn-success">Speichern</button>
+			</div>
+		</div>
+	</div>
+
+
