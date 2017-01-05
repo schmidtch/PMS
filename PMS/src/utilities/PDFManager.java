@@ -38,7 +38,7 @@ public class PDFManager {
 		
 	}
 
-	public boolean createPDF(Document d, Patient p) throws IOException, SQLException, IllegalArgumentException {
+	public boolean createPDF(Document d, Patient p, String betrag) throws IOException, SQLException, IllegalArgumentException {
 		boolean success = false;
         
         ServiceController sc = new ServiceController();
@@ -80,9 +80,9 @@ public class PDFManager {
 	        cos.beginText();
 	        cos.setFont(fontPlain, fontHeight);
 	        cos.newLineAtOffset(rect.getWidth()-180, rect.getHeight() - 45);
-	        cos.showText("St. Veiter Straße 103");
+	        cos.showText("Heiligenstatt 2");
 	        cos.newLineAtOffset(0, -lineHeight);
-	        cos.showText("A-9020 Klagenfurt");
+	        cos.showText("A-8850 Murau");
 	        cos.newLineAtOffset(0, -lineHeight);
 	        cos.showText("+43 664 266 63 52");
 	        cos.newLineAtOffset(0, -lineHeight);
@@ -168,7 +168,7 @@ public class PDFManager {
 	        cos.beginText();
 	        cos.setFont(fontBold, fontHeight+2);
 	        cos.newLineAtOffset(rect.getWidth()-300, rect.getHeight() - 650);
-	        cos.showText("Rechnungsbetrag in Euro: 100 .-");
+	        cos.showText("Rechnungsbetrag in Euro: "+betrag+" .-");
 	        cos.endText();
 	        
 	        //Textbox für Footer:

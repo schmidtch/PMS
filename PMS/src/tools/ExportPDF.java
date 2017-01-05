@@ -30,6 +30,7 @@ public class ExportPDF {
 		
 		int caseno = Integer.parseInt(in.getString("caseno"));
 		int pid = Integer.parseInt(in.getString("pid"));
+		String betrag = in.getString("betrag");
 		
 		PDFManager pdfManager = new PDFManager();
 		Document d = new Document(Document.HN, caseno);
@@ -37,7 +38,7 @@ public class ExportPDF {
 		String status="error", error="";
 		try {
 			try {
-				if(pdfManager.createPDF(d, p)){
+				if(pdfManager.createPDF(d, p, betrag)){
 					status="success";
 				} else {
 					error="Patient sind keine Leistungen zugeordnet!";

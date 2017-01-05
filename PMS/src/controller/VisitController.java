@@ -22,7 +22,7 @@ public class VisitController {
 		int id = 0;
 		String today = new SimpleDateFormat("dd.MM.yyyy").format(new Date());
 		try {
-			PreparedStatement stmt = DBConnectionHandler.getConnection().prepareStatement("insert into Visit (PATID, visitdate) values ('"+p.getPatId()+"', STR_TO_DATE('"+today+"', '%d.%m.%Y'));", Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement stmt = DBConnectionHandler.getConnection().prepareStatement("insert into Visit (PATID, visitdate) values ('"+p.getPatId()+"', STR_TO_DATE('"+today+"', '%d.%m.%Y'))", Statement.RETURN_GENERATED_KEYS);
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
 			while(rs.next()){
@@ -31,7 +31,12 @@ public class VisitController {
 			rs.close();
 			stmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if(e.getMessage().indexOf("Duplicate entry")>-1){
+				id = -1;
+				System.out.println("INFO: "+e.getMessage() + " " +p.getPatId());
+			} else {
+				e.printStackTrace();
+			}
 		} finally {
 			try {
 				DBConnectionHandler.closeConnection();
