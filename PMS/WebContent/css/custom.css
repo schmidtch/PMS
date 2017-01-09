@@ -1,0 +1,16 @@
+#searchbar{
+	display:none;
+}
+#searchbar div{
+        width:25%;
+        float:left;
+}
+#searchbar div input{
+        width:100%;
+}
+.icon {
+	width:15px;
+}
+div.diagnoseContainer, div.serviceContainer,#ajaxLoader,div.uploadContainer, div.fotoContainer{
+	display:none;
+}
