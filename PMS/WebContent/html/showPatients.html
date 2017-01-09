@@ -1,100 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<script>
-	$(document).ready(function(e){
-		$("#patientList tbody tr").each(function(i, row){
-			if(i%2 != 0){
-				$(this).attr('class', 'colorRow');
-			} else {
-				$(this).attr('class', '');
-			}
-		});
-		$("#patientList").tablesorter();
-		$("#patientList tr th").click(function(){
-			setTimeout(function(){
-				$("#patientList tbody tr").each(function(i, row){
-					if(i%2 != 0){
-						$(this).attr('class', 'colorRow');
-					} else {
-						$(this).attr('class', '');
-					}
-				});
-			});
-		});
-	});
-	$(".filtertxt").keyup(function(){
-		var id = $(this).attr('id');
-		var value = this.value.toLowerCase();
-		$("#patientList").find("tr").each(function(index){
-			if(index==0) return;
-			var sid = "";
-			$(this).find("td").each(function(i){
-				if($(this).attr('class')==id){
-					sid=$(this).text().toLowerCase();
-					$(this).parent().toggle(sid.indexOf(value) !== -1);
-				}
-			});
-		});
-	});
-	var oldID="";
-	$("span.menu").click(function(){
-		var id = $(this).attr('id');
-		if(oldID!=""){
-			$("#"+oldID+"bar").slideUp(function complete(){ 
-				if(oldID!=id){
-					//alert("oldID="+oldID+" id="+id);
-					$("#"+id+"bar").slideDown();
-				}
-			});
-		} else {
-			$("#"+id+"bar").slideDown();
-		}
-		if(oldID==id){
-			id="";
-		}
-		oldID=id;		
-	});
-	$("#patientList tr").click(function(){
-		var svnr = "";
-		var birthdate = "";
-		$(this).find("td").each(function(i){
-			var clas = $(this).attr('class');
-			if(clas=="svnr") svnr = $(this).text();
-			else if(clas=="birthdate") birthdate = $(this).text();
-		});
-		$.ajax({
-			type: "POST",
-			url: "patient/show",
-			dataType: "json",
-			contentType: "application/json; charset=utf-8",
-			data : JSON.stringify({ svnr : svnr, birthdate : birthdate}),
-			success: function (data) {
-				if(data.msg=="success"){
-					$("#content").html(data.data);
-				} else {
-					alert("Error");
-				}
-			}
-		});
-	});
-	</script>
-</head>
-<body>
-	<h2>Patientenliste</h2>
-	<div id="bars">
-		<div id="menubar">
-			<span class="menu link" id="search">Filter</span>
-		</div>
-		<div id="searchbar">
-			<div><input type="text" class="filtertxt" name="name" id="name" placeholder="Search Name..." /></div>
-			<div><input type="text" class="filtertxt" name="givenname" id="givenname" placeholder="Search Vorname..." /></div>
-			<div><input type="text" class="filtertxt" name="svnr" id="svnr" placeholder="Search SVNR..." /></div>
-			<div><input type="text" class="filtertxt" name="birthdate" id="birthdate" placeholder="Search Geburtsdatum..." /></div>
-		</div>
+<div class="container" id="bars">
+	<div class="btn-group" role="group" aria-label="...">
+		<button type="button" class="btn btn-default" onclick="menuFunction('search')">Filter</button>
 	</div>
-	<table id="patientList" class="tablesorter">
+	<div id="searchbar" style="margin-top:5px;">
+		<div><input type="text" class="filtertxt form-control" name="name" id="name" placeholder="Search Name..." /></div>
+		<div><input type="text" class="filtertxt form-control" name="givenname" id="givenname" placeholder="Search Vorname..." /></div>
+		<div><input type="text" class="filtertxt form-control" name="svnr" id="svnr" placeholder="Search SVNR..." /></div>
+		<div><input type="text" class="filtertxt form-control" name="birthdate" id="birthdate" placeholder="Search Geburtsdatum..." /></div>
+	</div>
+</div>
+<div class="container">
+	<table id="patientList" class="tablesorter table table-striped">
 		<thead>
 			<tr><th>Name</th><th>Vorname</th><th>SVNR</th><th>Geburtsdatum</th></tr>
 		</thead>
@@ -102,5 +18,21 @@
 			$patients
 		</tbody>
 	</table>
-</body>
-</html>
+</div>
+<script>
+$(".filtertxt").keyup(function() {
+	var id = $(this).attr('id');
+	var value = this.value.toLowerCase();
+	$("#patientList").find("tr").each(function(index) {
+		if (index == 0)
+			return;
+		var sid = "";
+		$(this).find("td").each(function(i) {
+			if ($(this).attr('class') == id) {
+				sid = $(this).text().toLowerCase();
+				$(this).parent().toggle(sid.indexOf(value) !== -1);
+			}
+		});
+	});
+});
+</script>

@@ -70,11 +70,12 @@ public class Diagnose {
 		return ltt;
 	}
 	
-	public String toHTMLBlock(){
+	public String toHTMLBlock(int caseno){
 		
 		StringReplacer sr = new StringReplacer();
 		Properties p = new Properties();
 		p.put("$title", title);
+		p.put("$caseno", String.valueOf(caseno));
 		p.put("$type", getLongTextType());
 		p.put("$text", text.replaceAll("\n", "<br />"));
 		sr.setReplacements(p);

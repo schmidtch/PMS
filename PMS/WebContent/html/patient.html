@@ -129,7 +129,7 @@ $("#compareFoto").click(function(e){
 	}
 });
 var caseno = '';
-$(".services").click(function(e){
+/*$(".services").click(function(e){
 	var id = $(this).parent().parent().attr('id');
 	$.fancybox({
         'content' :$("#"+id+" .serviceContainer").html(),
@@ -139,7 +139,7 @@ $(".services").click(function(e){
 	});
     $("#"+id+" .serviceContainer").html("");
 	caseno = '';
-});
+});*/
 
 function handleDropEvent( event, ui ) {
   var draggable = ui.draggable;
@@ -160,10 +160,10 @@ function refreshChecked(id){
 	});
 }
 
-//$("div.serviceContainer input.saveServices").click(function(e){
+
 function saveService(caseno){
 	var selectedServices = "";
-	$('#serviceInnerWrapper_'+caseno+' input:checked').each(function() {
+	$('#'+caseno+'ServiceContent input:checked').each(function() {
 		selectedServices += $(this).val()+";";
 	});
 	services = JSON.stringify({caseno : caseno, selectedServices : selectedServices});
@@ -177,19 +177,15 @@ function saveService(caseno){
 		success: function (data) {
 			var content = "";
 			if(data.status=="success"){
-		    	$.fancybox.close();
 		    	refreshChecked(caseno);
-		    	caseno='';
+	    		$("#successModal").modal();
+	    		caseno='';
+	    		setTimeout("$('#successModal').modal('toggle');", 1500);
 			} else {
-				content='Fehler beim verspeichern der Leistugen für den Patienten!<br />'+data.msg;
-				$.alert({
-				    title: 'Leistungen Speichern',
-				    content: content,
-				    confirm: function(){
-				    	$.fancybox.close();
-				    	caseno='';
-				    }
+				BootstrapDialog.show({
+					message : 'Fehler beim verspeichern der Leistungen für den Patienten!<br />'+data.msg
 				});
+				//alert('Fehler beim verspeichern der Leistugen für den Patienten!<br />'+data.msg);
 			}
 			
 		}
@@ -198,17 +194,7 @@ function saveService(caseno){
 }
 
 $(".showDiagnosis").click(function(e){
-	var cont = '<div class="showDiagContainer"><h3 style="width:100%; text-align:center;">Diagnosen</h3>';
-	var text = '';
-	$(this).parent().find("div.diagnoseContainer").each(function(e){
-		text+=$(this).html();
-	});
-	if(text!=''){
-		cont+=text+'</div>';
-		$.fancybox({
-	        'content' : cont
-		});
-	}
+	
 });
 $(".exportHonoranote").click(function(e){
 	var caseno = $(this).parent().parent().parent().parent().attr('id');
@@ -613,46 +599,60 @@ function reloadTungPics(pid){
 }
 
 </script>
-<div id="menuBar" style="width:90%; margin:auto; margin-top:20px;">
-	<span class="link" id="back">Zur&uuml;ck</span> 
-	<span class="link" id="newVisit">Neuer Besuch</span>
-	<span class="link_inactiv" id="compareFoto">Foto Abgleich</span>
+<div class="container">
+	<div class="btn-group" role="group" aria-label="..." id="menuBar">
+		<button type="button" class="btn btn-default" id="back">Zurück</button>
+		<button type="button" class="btn btn-default" id="newVisit">Neuer Besuch</button>
+		<button type="button" class="btn btn-default" id="compareFoto">Foto Abgleich</button>
+	</div>
+	<div style="text-aligen:center; width:100%;" id="ajaxLoader"><img src="pictures/ajax-loader.gif" /></div>
+	<div id="dataContainer" class="container-fluid">
+		<div class="row">
+			<div id="person" class="col-md-4">
+				<div id="patientPortraiContainer">
+				$portrait
+				</div>
+				<div id="persondataContainer">
+					<div id="Persondata">
+						<h3><img id="editPersondata" src="pictures/edit.ico" class="icon edit" /> <img id="savePersondata" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closePersondata" src="pictures/close.ico" class="icon close" style="display:none;" /> $patientsName</h3>
+						<span class="headline">SVNR: </span><span class="content" id="svnr">$svnr</span><br />
+						<span class="headline">Geburtsdatum: </span><span class="content" id="gebdat">$gebdat</span>
+					</div>
+					<div id="Address">
+						<h3><img id="editAddress" src="pictures/edit.ico" class="icon edit" /> <img id="saveAddress" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closeAddress" src="pictures/close.ico" class="icon close" style="display:none;" /> Adresse:</h3>
+						<span class="headline">Stra&szlig;e: </span><span class="content">$street</span><br />
+						<span class="headline">PLZ: </span><span class="content">$zip</span><br />
+						<span class="headline">Ort: </span><span class="content">$location</span><br />
+						<span class="headline">Staat: </span><span class="content">$country</span>
+					</div>
+					<div id="Contact">
+						<h3><img id="editContact" src="pictures/edit.ico" class="icon edit" /> <img id="saveContact" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closeContact" src="pictures/close.ico" class="icon close" style="display:none;" /> Kontakt:</h3>
+						<span class="headline">Telefon: </span><span class="content">$telefon</span><br />
+						<span class="headline">Email: </span><span class="content">$email</span>
+					</div>
+				</div>
+			</div>
+			<div id="visitsContainer" class="col-md-8">
+				$visits
+			</div>
+		</div>
+		<input type="hidden" id="pid" value="$pid" />
+		<br style="clear:both;" />
+		
+		<div id="chooseFotos" style="display:none">
+		</div>
+	</div>
 </div>
-<div id="ajaxLoader"><img src="pictures/ajax-loader.gif" /></div>
-<div id="dataContainer">
-	<div id="person">
-		<div id="patientPortraiContainer">
-		$portrait
-		</div>
-		<div id="persondataContainer">
-			<div id="Persondata">
-				<h3><img id="editPersondata" src="pictures/edit.ico" class="icon edit" /> <img id="savePersondata" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closePersondata" src="pictures/close.ico" class="icon close" style="display:none;" /> $patientsName</h3>
-				<span class="headline">SVNR: </span><span class="content" id="svnr">$svnr</span><br />
-				<span class="headline">Geburtsdatum: </span><span class="content" id="gebdat">$gebdat</span>
-			</div>
-			<div id="Address">
-				<h3><img id="editAddress" src="pictures/edit.ico" class="icon edit" /> <img id="saveAddress" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closeAddress" src="pictures/close.ico" class="icon close" style="display:none;" /> Adresse:</h3>
-				<span class="headline">Stra&szlig;e: </span><span class="content">$street</span><br />
-				<span class="headline">PLZ: </span><span class="content">$zip</span><br />
-				<span class="headline">Ort: </span><span class="content">$location</span><br />
-				<span class="headline">Staat: </span><span class="content">$country</span>
-			</div>
-			<div id="Contact">
-				<h3><img id="editContact" src="pictures/edit.ico" class="icon edit" /> <img id="saveContact" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closeContact" src="pictures/close.ico" class="icon close" style="display:none;" /> Kontakt:</h3>
-				<span class="headline">Telefon: </span><span class="content">$telefon</span><br />
-				<span class="headline">Email: </span><span class="content">$email</span>
-			</div>
-		</div>
-	</div>
-	<div id="visitsContainer">
-		$visits
-	</div>
-	<input type="hidden" id="pid" value="$pid" />
-	<br style="clear:both;" />
-	
-	<div id="chooseFotos" style="display:none">
-	</div>
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="Success">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Erfolgreich gespeichert</h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-	
-	
-</div>

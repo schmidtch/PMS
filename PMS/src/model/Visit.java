@@ -47,7 +47,7 @@ public class Visit {
 		if(!this.diagnosis.isEmpty()){
 			diagButton = "link";
 			for(Diagnose d : this.diagnosis) {
-				diagContent += d.toHTMLBlock();
+				diagContent += d.toHTMLBlock(this.caseno);
 			}
 		} else {
 			diagButton = "link_inactiv";

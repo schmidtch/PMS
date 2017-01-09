@@ -1,20 +1,22 @@
-<div class="visit" id="$caseno">
-        <h3>
-            <span id="$casenoTitle">Besuch am $visitdate</span>
-			<div style="float:right;">
-				<img src="pictures/action_left.png" style="height:30px;" class="showMenu" />
-				<div style="float:right; display:none;" id="$casenoMenu">
-					<span class="link newDiagnose" onClick="javascript:getDiagForm('$caseno')">Neue Diagnose</span>
-	                <span class="link importFoto">Upload</span>
-	                <span class="link exportHonoranote">Honoranote</span>           
-				</div>
+<div class="container-fluid visit" id="$caseno">
+	<div class="row">
+    	<div class="col-md-4"><span id="$casenoTitle">Besuch am $visitdate</span></div>
+		<div class="col-md-8">
+			<img src="pictures/action_left.png" style="height:30px;" class="showMenu" />
+			<div style="float:right; display:none;" id="$casenoMenu">
+				<span class="link newDiagnose" onClick="javascript:getDiagForm('$caseno')">Neue Diagnose</span>
+	            <span class="link importFoto">Upload</span>
+	            <span class="link exportHonoranote">Honoranote</span>           
 			</div>
-        </h3>
+		</div>
+	</div>
+	<div class="row">
         <div class="visitMenuContainer">
-                <span class="link services">Leistungen</span> 
-                <span class="$diagAktiv showDiagnosis">Diagnose Anzeigen</span> 
-                <span class="$fotoAktiv showFotos">Fotos Anzeigen</span>
-                <br />
+			<div class="btn-group" role="group">
+            	<button type="button" class="btn btn-primary services" data-toggle="modal" data-target="#$casenoServiceContainer">Leistungen</button> 
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#$casenoDiagnoseContainer">Diagnose Anzeigen</button>
+                <button type="button" class="btn btn-primary $fotoAktiv showFotos" data-toggle="modal" data-target="">Fotos Anzeigen</button>
+             </div>
                 $printServicesdiagContent
                 <div id="$caseno_uploadContainer" class="uploadContainer">
                         <h3 style="text-align:center;">Foto für Besuch am $visitdate hochladen:</h3>
@@ -32,4 +34,5 @@
                 </div>
                 <div id="$caseno_showFotoContainer" class="fotoContainer"></div>
         </div>
+	</div>
 </div>

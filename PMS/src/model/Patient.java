@@ -152,7 +152,7 @@ public class Patient {
 	}
 	
 	public String toTableRow(){
-		return "<tr><td class=\"name\">"+name+"</td><td class=\"givenname\">"+givenname+"</td><td class=\"svnr\">"+svnr+"</td><td class=\"birthdate\">"+birthdate+"</td></tr>";
+		return "<tr onclick=\"patientListClick('"+svnr+"','"+birthdate+"')\"><td class=\"name\">"+name+"</td><td class=\"givenname\">"+givenname+"</td><td class=\"svnr\">"+svnr+"</td><td class=\"birthdate\">"+birthdate+"</td></tr>";
 	}
 	
 	public Patient fullFillObject(ResultSet rs){

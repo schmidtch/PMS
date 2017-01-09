@@ -1,6 +1,16 @@
-<div class="serviceContainer">
-	<div id="serviceInnerWrapper_$caseno">
-	$services
-	</div>
-    <p class="buttonBlock"><input type="button" value="Speichern" class="saveServices" onclick="javascript:saveService($caseno)" /></p>
+<div class="modal fade" id="$casenoServiceContainer" tabindex="-1" role="dialog" aria-labelledby="Leistungen">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Leistungen</h4>
+      </div>
+      <div id="$casenoServiceContent" class="modal-body">
+      	$services 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:saveService($caseno)">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>
