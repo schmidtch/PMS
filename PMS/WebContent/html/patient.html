@@ -192,12 +192,8 @@ function saveService(caseno){
 	});
 	
 }
-
-$(".showDiagnosis").click(function(e){
-	
-});
 $(".exportHonoranote").click(function(e){
-	var caseno = $(this).parent().parent().parent().parent().attr('id');
+	var caseno = $(this).parent().parent().parent().parent().attr('id').split("_")[1];
 	var pid = $("#pid").val();
 	var betrag = prompt("Bitte Rechnungsbetrag eingeben:");
 	if(betrag.length>0) {
@@ -220,15 +216,10 @@ $(".exportHonoranote").click(function(e){
 				} else {
 					content = 'Fehler: '+data.error;
 				}
-				$.alert({
-				    title: 'Honorarexport!',
-				    content: content,
-				    confirm: function(){
-				    	$("#ajaxLoader").fadeOut(function() {
-					    	$("#dataContainer").fadeIn();
-					    	$("#menuBar").fadeIn();
-				    	});
-				    }
+				alert(content);
+				$("#ajaxLoader").fadeOut(function() {
+				 	$("#dataContainer").fadeIn();
+				   	$("#menuBar").fadeIn();
 				});
 			}
 		});
@@ -236,21 +227,14 @@ $(".exportHonoranote").click(function(e){
 		alert("Bitte einen Betrag eingeben!");
 	}
 });
-$(".importFoto").click(function(){
+/*$(".importFoto").click(function(){
 	var caseno = $(this).parent().parent().parent().parent().attr('id');
-	$.fancybox({
-        'content' : $("#"+caseno+"_uploadContainer").show(),
-        onCleanup: function() { 
-        	$("#"+caseno).append($("#"+caseno+"_uploadContainer"));
-			$("#"+caseno+"_uploadContainer").hide();
-			$(".preview").html('');
-        }
-	});
-});
+	$("#"+caseno+"_showFotoModal").modal('show');
+});*/
 $(".showFotos").click(function(){
 	if($(this).attr('class').indexOf("inactiv")==-1) {
-		var caseno = $(this).parent().parent().attr('id');
-		resultEl = $("#"+caseno+"_showFotoContainer");
+		var caseno = $(this).parent().parent().attr('id').split("_")[1];
+		resultEl = $("#"+caseno+"_showFotoModalBody");
 		actEl = $(this);
 		$.ajax({
 		    crossDomain: true,
@@ -268,30 +252,23 @@ $(".showFotos").click(function(){
 			    	resultEl.append('<img src="data:image/jpg;base64,' + data['pic_'+j] + '" style="width:300px;" />');
 			    	resultEl.append('<br />');
 			    }
-			    $.fancybox({
-			        'content' : '<div class="fotoContainer" style="display:block;">'+$(resultEl).html()+'</div>',
-			        onCleanup: function() {}
-				});
+			    $("#"+caseno+"_showFotoModal").modal('show');
 			} else if (data.state=="error"){
-				$.alert({
-				    title: 'Fotos!',
-				    content: data.msg,
-				    confirm: function(){}
-				});
+				alert(data.msg);
 			}
 		});
 	}
 });
 $('input[type=file]').change(function(e){
-	var parId = $(this).parent().parent().attr('id');
+	var parId = $(this).attr('id').split("_")[1];
 	files=$(this).get(0).files;
 	anz=0;
 	for(i=0; i<files.length; i++){
 		var oFReader = new FileReader();
         oFReader.readAsDataURL(files[i]);
         oFReader.onload = function (oFREvent) {
-        	$("div#"+parId+" div.preview").append('<img src="'+oFREvent.target.result+'" name="preview_'+anz+'" style="width:150px;" /> ') ;
-        	$("div#"+parId+" div.preview").append('<select id="kategorie_'+anz+'"><option value="zunge">Zunge</option><option value="sonstige">Sonstige</option><option value="portrait">Patientenportrait</option></select><br />');
+        	$("#"+parId+"_preview").append('<img src="'+oFREvent.target.result+'" name="preview_'+anz+'" style="width:150px;" /> ') ;
+        	$("#"+parId+"_preview").append('<select id="kategorie_'+anz+'"><option value="zunge">Zunge</option><option value="sonstige">Sonstige</option><option value="portrait">Patientenportrait</option></select><br />');
         	anz++;
         };
 	}
@@ -520,25 +497,8 @@ function uploadFoto(caseno) {
 }
 
 function getDiagForm(id){
-		$.ajax({
-			type: "GET",
-			url: "diagnose/newDiagnose",
-			dataType: "html",
-			contentType: "text/html;charset=UTF-8",
-			success: function (data) {
-				$.fancybox({
-			        'content' : data,
-			        onCleanup: function() { 
-						$("#actCaseno").val('');
-			        }
-				});
-				$("#actCaseno").val(id);
-			}
-		});
-}
-
-function cancelUpload(caseno) {
-	$.fancybox.close();
+	$('#newDiagModal').modal('show');
+	$("#actCaseno").val(id);
 }
 
 function IsNullOrEmpty(value)
@@ -606,9 +566,9 @@ function reloadTungPics(pid){
 		<button type="button" class="btn btn-default" id="compareFoto">Foto Abgleich</button>
 	</div>
 	<div style="text-aligen:center; width:100%;" id="ajaxLoader"><img src="pictures/ajax-loader.gif" /></div>
-	<div id="dataContainer" class="container-fluid">
+	<div id="dataContainer" class="container-fluid" style="margin-top:10px;">
 		<div class="row">
-			<div id="person" class="col-md-4">
+			<div id="person" class="col-md-5">
 				<div id="patientPortraiContainer">
 				$portrait
 				</div>
@@ -632,8 +592,17 @@ function reloadTungPics(pid){
 					</div>
 				</div>
 			</div>
-			<div id="visitsContainer" class="col-md-8">
-				$visits
+			<div id="visitsContainer" class="col-md-7">
+				<div class="panel panel-default">
+				  <div class="panel-heading">
+				    <h3 class="panel-title">Besuche</h3>
+				  </div>
+				  <div class="panel-body">
+				     <div class="panel-group" id="accordionVisits" role="tablist" aria-multiselectable="true">
+					    $visits
+					  </div>
+				  </div>
+				</div>
 			</div>
 		</div>
 		<input type="hidden" id="pid" value="$pid" />

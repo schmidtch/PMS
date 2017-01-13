@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import controller.IImageController;
 
 
-@Path("showF")
+@Path("/showF")
 public class ShowFoto {
 	
 	@POST

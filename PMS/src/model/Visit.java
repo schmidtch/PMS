@@ -13,7 +13,7 @@ public class Visit {
 	private ArrayList<Service> services = new ArrayList<Service>();
 	private String serviceCatalogueHTML = "";
 	private int numberService=0;
-	public String fotosAktiv = "link";
+	public String fotosAktiv = "";
 	
 	public Visit(){}
 
@@ -45,12 +45,21 @@ public class Visit {
 		Properties pvisit = new Properties();
 		
 		if(!this.diagnosis.isEmpty()){
-			diagButton = "link";
+			diagButton = "";
+			diagContent = "<div class=\"modal fade\" id=\""+caseno+"DiagnoseContainer\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"Diagnosen\">"+
+						     "<div class=\"modal-dialog\" role=\"document\">"+
+						     	"<div class=\"modal-content\">"+
+						     			"<div class=\"modal-header\">"+
+						     					"<h4 class=\"modal-title\" id=\"myModalLabel\">Diagnosen</h4></div>"+
+						     						"<div class=\"modal-body\">";
 			for(Diagnose d : this.diagnosis) {
 				diagContent += d.toHTMLBlock(this.caseno);
 			}
+			diagContent += "</div><div class=\"modal-footer\">"+
+								"<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>"+
+							"</div></div></div></div>";
 		} else {
-			diagButton = "link_inactiv";
+			diagButton = "disabled";
 		}
 		if(!this.services.isEmpty()) {
 			for (Service s : this.services) {

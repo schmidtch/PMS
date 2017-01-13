@@ -1,38 +1,148 @@
-<div class="container-fluid visit" id="$caseno">
-	<div class="row">
-    	<div class="col-md-4"><span id="$casenoTitle">Besuch am $visitdate</span></div>
-		<div class="col-md-8">
-			<img src="pictures/action_left.png" style="height:30px;" class="showMenu" />
-			<div style="float:right; display:none;" id="$casenoMenu">
-				<span class="link newDiagnose" onClick="javascript:getDiagForm('$caseno')">Neue Diagnose</span>
-	            <span class="link importFoto">Upload</span>
-	            <span class="link exportHonoranote">Honoranote</span>           
-			</div>
+<div class="panel panel-default" style="margin-bottom:5px;">
+	<div class="panel-heading" role="tab" id="heading_$caseno">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordionVisits" href="#collapse_$caseno" aria-expanded="true" aria-controls="$caseno">
+          Besuch am $visitdate
+        </a>
+      </h4>
+    </div>
+    <div id="collapse_$caseno" class="panel-collapse collapse" role="tabpanel" aria-labelledby="Besuch am $visitdate">
+      <div class="panel-body">
+	        <div class="visitMenuContainer">
+				<div class="btn-group" role="group">
+	            	<button id="diagnosisD" class="btn btn-default btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    Diagnose <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="diagnosisD">
+					   <li><a href="#" onClick="javascript:getDiagForm('$caseno')">Neu</a></li>
+    				   <li><a data-toggle="modal" href="#$casenoDiagnoseContainer" data-target="#$casenoDiagnoseContainer">Anzeigen</a></li>
+					</ul>
+				</div>
+				<div class="btn-group" role="group" style="margin-left: -5px; border-radius: 0;">
+	            	<button style="border-right: none; border-radius: 0;" id="fotosD" class="btn btn-default btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    Fotos <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="fotosD" id="dropdown_$caseno">
+					   <li><a data-toggle="modal" href="#$caseno_uploadModal" data-target="#$caseno_uploadModal">Hochladen</a></li>
+    				   <li><a href="#" class="showFotos">Anzeigen</a></li>
+					</ul>
+		            <button type="button" class="btn btn-default btn-sm link exportHonoranote">Honoranote</button>       
+	            	<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#$casenoServiceContainer">Leistungen</button> 
+	             </div>
+	                $printServicesdiagContent
+	                <div id="$caseno_uploadModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Fotos Hochladen">
+	                	<div class="modal-dialog" role="document">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h4 class="modal-title">Foto für Besuch am $visitdate hochladen:</h4>
+						      </div>
+						      <div class="modal-body">
+						      	<p style="text-align:center;">
+	                                <label class="custom-file-input btn btn-primary btn-lg" for="upload_$caseno" >Upload</label><br />
+	                                <input id="upload_$caseno" class="upload" type="file" multiple="multiple" name="_photos" accept="image/*" style="visibility: hidden">
+		                        </p>
+		                        <div id="$caseno_preview" class="preview"></div>
+		                        <br />
+		                        <!-- <input type="file" id="upload_$caseno" name="file" multiple="multiple" class="custom-file-input"/> -->
+		                      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:uploadFoto($caseno)">Speichern</button>
+						      </div>
+						    </div>
+						</div>	                        
+	                </div>
+	                <div id="$caseno_showFotoModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Fotos">
+					  <div class="modal-dialog" role="document">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <h4 class="modal-title">Fotos</h4>
+					      </div>
+					      <div class="modal-body" id="$caseno_showFotoModalBody">
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					      </div>
+					    </div>
+					  </div>
+					</div>
+	        </div>
 		</div>
 	</div>
-	<div class="row">
-        <div class="visitMenuContainer">
-			<div class="btn-group" role="group">
-            	<button type="button" class="btn btn-primary services" data-toggle="modal" data-target="#$casenoServiceContainer">Leistungen</button> 
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#$casenoDiagnoseContainer">Diagnose Anzeigen</button>
-                <button type="button" class="btn btn-primary $fotoAktiv showFotos" data-toggle="modal" data-target="">Fotos Anzeigen</button>
-             </div>
-                $printServicesdiagContent
-                <div id="$caseno_uploadContainer" class="uploadContainer">
-                        <h3 style="text-align:center;">Foto für Besuch am $visitdate hochladen:</h3>
-                        <p style="text-align:center;">
-                                <label class="custom-file-input" for="upload_$caseno" ></label><br />
-                                <input id="upload_$caseno" class="upload" type="file" multiple="multiple" name="_photos" accept="image/*" style="visibility: hidden">
-                        </p>
-                        <div class="preview"></div>
-                        <br />
-                        <!-- <input type="file" id="upload_$caseno" name="file" multiple="multiple" class="custom-file-input"/> -->
-                        <p class="buttonBlock">
-                                <input type="button" value="Speichern" onclick="javascript:uploadFoto($caseno)" />
-                                <input type="button" value="Abbrechen" onclick="javascript:cancelUpload($caseno)" />
-                        </p>
-                </div>
-                <div id="$caseno_showFotoContainer" class="fotoContainer"></div>
-        </div>
+</div>
+<div class="modal fade" id="newDiagModal" tabindex="-1" role="dialog" aria-labelledby="Neue Diagnose">
+	<div id="newDiagnoseFormContainer">
+		<script>
+			function saveForm(){
+				var title = $("#type").val();
+				var type = $("#type").val();
+				var text = $("#text").val();
+				var caseno = $("#actCaseno").val();
+				diagnose = JSON.stringify({title : title, type : type, text : text, caseno : caseno});
+				$.ajax({
+					type : "POST",
+					url : "diagnose/newDiagnose",
+					contentType : "application/json; charset=utf-8",
+					dataType : "json",
+					data : diagnose
+				}).done(function(msg) {
+					var responseText = msg.state;
+					if(responseText=="success"){
+			    		$("#successModal").modal();
+			    		setTimeout("$('#successModal').modal('toggle');", 1500);
+			    		$('#successModal').on('hidden.bs.modal', function () {
+			    			$.ajax({
+								type: "POST",
+								url: "patient/show",
+								dataType: "json",
+								contentType: "application/json; charset=utf-8",
+								data : JSON.stringify({ svnr : $("#svnr").text(), birthdate : $("#gebdat").text()}),
+								success: function (data) {
+									if(data.msg=="success"){
+										$("#content").html(data.data);
+							    		caseno='';
+									} else {
+										alert("Error");
+									}
+								}
+							});
+			    		});						
+					} else {
+						alert("Ein Fehler ist aufgetreten: "+msg.error);
+					}		
+				});	
+			}
+		</script>
+			<div class="modal-dialog" role="document">
+				<form id="newDiagnoseForm" action="">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h4 class="modal-title">Neue Diagnose</h4>
+				      </div>
+				      <div class="modal-body">
+				      	<div class="form-group row">
+					      	<label for="type" class="col-sm-2 col-form-label">Name</label>
+							<div class="col-sm-10">
+								<select id="type" required class="form-control">
+									<option value="">Bitte w&auml;hlen</option>
+									<option value="sm">Schulmedizinisch</option>
+									<option value="ch">Chinesisch</option>
+								</select>
+							</div>
+							<label for="text" class="col-sm-2 col-form-label">Text</label>
+							<div class="col-sm-10">
+								<textarea name="text" id="text" rows="8" cols="40" required class="form-control"></textarea><br />
+							</div>
+							<input type="hidden" id="actCaseno" value="" />
+						</div>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Close</button>
+				        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="saveForm()">Save</button>
+				      </div>
+				    </div>
+				</form>
+			</div>
 	</div>
 </div>
+

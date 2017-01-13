@@ -89,7 +89,7 @@ public class ShowPatient {
 						serviceCatalogue = "Kein Leistungs-Katalog vorhanden!";
 					}
 					for (Visit v : visits) {
-						if(iic.getAllImagesForVisit(v.getCaseno()).isEmpty()) v.fotosAktiv="link_inactiv";
+						if(iic.getAllImagesForVisit(v.getCaseno()).isEmpty()) v.fotosAktiv="disabled";
 						v.setServiceCatalogueHTML(serviceCatalogue);
 						v.setNumberService(sca.getNumberOfService());
 						visitsData += v.toHTMLParagraph();
