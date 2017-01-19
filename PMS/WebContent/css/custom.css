@@ -1,3 +1,11 @@
+@media screen and (min-width: 768px) {
+    .modal-wide, .modal-dialog{
+        width: 100%;
+        height:100%;
+        margin-left:auto;
+        margin-right:auto;
+    }
+}
 #searchbar{
 	display:none;
 }
@@ -13,4 +21,45 @@
 }
 div.diagnoseContainer, div.serviceContainer,#ajaxLoader,div.uploadContainer, div.fotoContainer{
 	display:none;
+}
+.custom-modal-dialog{
+	padding:0;
+	margin:0;
+}
+div#fotoShownContainer{
+	width:100%;
+	height:100%;
+}
+div#fotoShownBig{
+	position: relative;
+	height: 80%;
+}
+div#fotoBarContainer{
+	height:20%;
+	text-align:center;
+}
+div.leftPicContainer{
+	/*float:left;
+	width:49%;*/
+	text-align:center;
+	height:100%;
+	border:1px solid;
+}
+div.rightPicContainer{
+	/*marign-left:5px;
+	width:49%;
+	float:right;*/
+	text-align:center;
+	height:100%;
+	border: 1px solid;
+}
+span.bildBeschriftung{
+	background-color: silver;
+    background-color: hsla(0, 0%, 100%, 0.5);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left:0;
+    line-height: 2em;
+    text-align: center;
 }

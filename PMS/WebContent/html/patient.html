@@ -68,17 +68,12 @@ $("#back").click(function(){
 });
 var leftPic="", rightPic="";
 $("#compareFoto").click(function(e){
-	if($(this).attr('class')=="link") {
+		$("#chooseFotosModal").css("height",window.innerHeight-150+"px");
+		$("#chooseFotosModal").css("width", window.innerWidth-150+"px");
 		$("#chooseFotosContainer").css("height",window.innerHeight-150+"px");
 		$("#chooseFotosContainer").css("width", window.innerWidth-150+"px");
-		$.fancybox({
-	        'content' : $("#chooseFotos").html(),
-	        onCleanup: function() { 
-		    	$("#chooseFotos").html($("#fancybox-inner").html());    
-	        }
-	    });
-		$("#chooseFotos").html("");
-		//.comparePic
+		$("#chooseFotosModal").modal('show');
+	        
 		$(".comparePic").draggable();
 	
 		$(".leftPicContainer").droppable( {
@@ -126,7 +121,6 @@ $("#compareFoto").click(function(e){
 		        $("#"+ui.draggable.attr('id')).css("left", "0");
 			}
 		});
-	}
 });
 var caseno = '';
 /*$(".services").click(function(e){
@@ -541,7 +535,7 @@ function reloadTungPics(pid){
 		success: function (resp) {
 			if(resp.state=="success"){
 				if(resp.fotos=="yes") {
-					$("#chooseFotos").html(resp.data).promise().done(function(){ 
+					$("#chooseFotosContent").html(resp.data).promise().done(function(){ 
 						$("#compareFoto").removeClass("link_inactiv"); 
 						$("#compareFoto").addClass("link"); 
 					});
@@ -552,7 +546,7 @@ function reloadTungPics(pid){
 				    content: resp.data,
 				    confirm: function(){}
 				});*/
-				$("#chooseFotos").html(resp.data);
+				$("#chooseFotosContent").html(resp.data);
 			}
 		}
 	});
@@ -606,11 +600,21 @@ function reloadTungPics(pid){
 			</div>
 		</div>
 		<input type="hidden" id="pid" value="$pid" />
-		<br style="clear:both;" />
-		
-		<div id="chooseFotos" style="display:none">
-		</div>
 	</div>
+</div>
+<div class="modal fade modal-wide" id="chooseFotosModal" tabindex="-1" role="dialog" aria-labelledby="Success">
+  <div class="modal-dialog custom-modal-dialog" role="document">
+    <div class="modal-content" style="height:100%;">
+      <div class="modal-header">
+        <h4 class="modal-title">Foto Abgleich</h4>
+      </div>
+      <div class="modal-body" id="chooseFotosContent" style="height:80%;">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="Success">
   <div class="modal-dialog" role="document">
