@@ -15,7 +15,8 @@
 
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
- 	<link href="css/custom.css" rel="stylesheet">
+ 	<link href="css/custom.css" rel="stylesheet" />
+ 	<link href="css/login.css" rel="stylesheet" />
 	<!-- Latest compiled and minified JavaScript -->
 	<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -26,30 +27,50 @@
     <![endif]-->
   </head>
   <body>
-  	<nav class="navbar navbar-default navbar-static-top">
-  		<div class="container-fluid">
-  			<!-- Brand and toggle get grouped for better mobile display -->
-		    <div class="navbar-header">
-		      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-		        <span class="sr-only">Toggle navigation</span>
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span>
-		      </button>
-		      <a class="navbar-brand" href="#">PaientManagementSystem</a>
-		    </div>
-		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-		  		<ul id="menu" class="nav navbar-nav">
-		        	<li id="show"><a href="#">Patientenliste</a></li>
-		        	<li id="new"><a href="#">Neuer Patient</a></li>
-		      	</ul>
-	      	</div>
-  		</div>
-  	</nav>
-  	<div class="containter" id="content">
-  		
-  	</div>
-
+  	<div class="container" id="login-container">
+		<div class="login-container">
+	            <div id="output"></div>
+	            <div class="avatar"></div>
+	            <div class="form-box">
+	                <form action="" method="" id="loginForm">
+	                    <input id="username" name="user" type="text" placeholder="username">
+	                    <input id="password" type="password" placeholder="password">
+	                    <button class="btn btn-info btn-block login" type="submit">Login</button>
+	                </form>
+	            </div>
+	        </div>
+	        
+	</div>
+  	<div id="system-container" style="display:none;">
+	  	<nav class="navbar navbar-custom navbar-static-top">
+	  		<div class="header-top">
+			    <div class="container" style="padding-left:0; margin-left:0;">
+			      <h1 class="header-text">Patient Management System</h1>
+			    </div>
+			</div>
+	  		<div class="container-fluid">
+	  			<!-- Brand and toggle get grouped for better mobile display -->
+			    <div class="navbar-header">
+			      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+			        <span class="sr-only">Toggle navigation</span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			      </button>
+			      <a class="navbar-brand" href="#">PMS</a>
+			    </div>
+			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			  		<ul id="menu" class="nav navbar-nav">
+			        	<li id="show"><a href="#">Patientenliste</a></li>
+			        	<li id="new"><a href="#">Neuer Patient</a></li>
+			      	</ul>
+		      	</div>
+	  		</div>
+	  	</nav>
+	  	<div class="containter" id="content">
+	  		
+	  	</div>
+	</div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -73,11 +94,11 @@
 			});
 			$("#applicationContainer").css('min-height', $(this).height()-20);
 			$("#loginForm").submit(function(e) {
-				var username = MD5($("#username").val());
+				var username = MD5($("#username").val().toLowerCase());
 				var password = MD5($("#password").val());
 				if(username=="21232f297a57a5a743894a0e4a801fc3" && password=="21232f297a57a5a743894a0e4a801fc3"){
-					$(loginForm).fadeOut(function complete(){ 
-						$("#applicationContainer").fadeIn(); 
+					$("#login-container").fadeOut(function complete(){ 
+						$("#system-container").fadeIn(); 
 					});
 				} else {
 					alert('Access denied!');

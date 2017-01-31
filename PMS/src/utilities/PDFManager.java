@@ -32,7 +32,7 @@ public class PDFManager {
 	private int fontHeight = 12;
 	private int lineHeight = fontHeight+3;
 
-	private String filePath = "/home/christopher/Dokumente/PMS/patients/";
+	private String filePath = "/Volumes/Daten/Webserver/apache-tomcat-8.0.32/webapps/PMS_Content/";
 
 	public PDFManager() {
 		

@@ -9,9 +9,11 @@ import javax.ws.rs.core.MediaType;
 
 import org.json.JSONObject;
 
+import model.Document;
 import model.IImage;
 import model.Patient;
 import model.Visit;
+import controller.DocumentController;
 import controller.IImageController;
 import controller.PatientController;
 import controller.VisitController;
@@ -77,8 +79,10 @@ public class ShowPatient {
 				pr.put("$country", p.getAdress().getCountry());
 				pr.put("$telefon", p.getContact().getTelefon());
 				pr.put("$email", p.getContact().getEmail());
+				String link = ""+p.getName()+"_"+p.getGivenname()+"_"+String.valueOf(p.getSVNR())+"/honorarnote/";
 				ArrayList<Visit> visits = new VisitController().getVisitsForPatient(p);
 				IImageController iic = new IImageController();
+				DocumentController dc = new DocumentController();
 				String visitsData = "";
 				if(visits.isEmpty()){
 					visitsData = "Keine Besuche vorhanden!";
@@ -92,6 +96,9 @@ public class ShowPatient {
 						if(iic.getAllImagesForVisit(v.getCaseno()).isEmpty()) v.fotosAktiv="disabled";
 						v.setServiceCatalogueHTML(serviceCatalogue);
 						v.setNumberService(sca.getNumberOfService());
+						Document d = dc.getDocumentForCase(v.getCaseno());
+						d.setTitle(link + d.getTitle());
+						v.setHonorarnote(d);
 						visitsData += v.toHTMLParagraph();
 					}
 				}
@@ -100,14 +107,14 @@ public class ShowPatient {
 				IImage ii = iic.getPatientPortrait(p.getPatId());
 				
 				if(ii!=null){
-					pic = "<img id=\"portrait\" src=\"data:image/jpg;base64,"+ ii.getImg() +"\" style=\"height:250px;\" />";
+					pic = "<img id=\"portrait\" src=\"data:image/jpg;base64,"+ ii.getImg() +"\" class=\"img-circle img-responsive\" />";
 				} else {
 					if(p.getSex().equals("M")){
 						sex="male";
 					} else if (p.getSex().equals("F")){
 						sex="female";
 					}	
-					pic = "<img id=\"portrait\" src=\"pictures/"+sex+".png\" name=\"PatientIcon\" />";
+					pic = "<img id=\"portrait\" src=\"pictures/"+sex+".png\" name=\"PatientIcon\" class=\"img-circle img-responsive\" />";
 				}
 				pr.put("$portrait", pic);
 				

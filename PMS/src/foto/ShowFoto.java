@@ -41,6 +41,7 @@ public class ShowFoto {
 				state="success";
 				for(IImage i : images){
 					response.put("pic_"+String.valueOf(count),i.getImg());
+					response.put("picDesc_"+String.valueOf(count), i.getDescription());
 					count++;
 				}
 			}

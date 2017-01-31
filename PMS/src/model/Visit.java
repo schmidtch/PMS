@@ -14,6 +14,7 @@ public class Visit {
 	private String serviceCatalogueHTML = "";
 	private int numberService=0;
 	public String fotosAktiv = "";
+	private Document honorarnote;
 	
 	public Visit(){}
 
@@ -83,13 +84,22 @@ public class Visit {
 		if(this.diagnosis.size()==2){
 			hasAll="none";
 		}
+		String hasHonorarnote="none";
+		String hName = "";
+		if(!honorarnote.getType().equals("noDocument")){
+			hasHonorarnote="inline-block";
+			hName=honorarnote.getTitle();
+		}
 		
+		pvisit.put("$hasHonorarnote", hasHonorarnote);
+		//pvisit.put("$pdfName", hName);
 		pvisit.put("$caseno", String.valueOf(this.caseno));
 		pvisit.put("$hasAll", hasAll);
 		pvisit.put("$visitdate", visitdate);
 		pvisit.put("$diagAktiv", diagButton);
 		pvisit.put("$fotoAktiv", fotosAktiv);
 		pvisit.put("$printServicesdiagContent", printServices+diagContent);
+		pvisit.put("$link", honorarnote.getTitle());
 		sr.setReplacements(pvisit);
 		
 		return sr.replaceInFile(this.getClass().getResource("../../../html/visit.html").getPath()); 
@@ -133,6 +143,14 @@ public class Visit {
 
 	public void setNumberService(int numberService) {
 		this.numberService = numberService;
+	}
+
+	public Document getHonorarnote() {
+		return honorarnote;
+	}
+
+	public void setHonorarnote(Document honorarnote) {
+		this.honorarnote = honorarnote;
 	}
 	
 	

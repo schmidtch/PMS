@@ -42,5 +42,19 @@ public class DocumentController {
 		return found;
 	}
 	
+	public Document getDocumentForCase(int caseno) throws SQLException {
+		Document d = new Document("noDocument", caseno);
+		Statement stmt = DBConnectionHandler.getConnection().createStatement();
+		ResultSet rs = stmt.executeQuery("select title, type from Documents where caseno="+String.valueOf(caseno) + " and type='Honorarnote'");
+		while (rs.next()){
+			d.setTitle(rs.getString("title"));
+			d.setType(rs.getString("type"));
+		}
+		rs.close();
+		stmt.close();
+		DBConnectionHandler.closeConnection();
+		return d;
+	}
+	
 	
 }

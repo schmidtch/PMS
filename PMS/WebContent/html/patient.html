@@ -187,7 +187,7 @@ function saveService(caseno){
 	
 }
 $(".exportHonoranote").click(function(e){
-	var caseno = $(this).parent().parent().parent().parent().attr('id').split("_")[1];
+	var caseno = $(this).attr('id').split("_")[1];
 	var pid = $("#pid").val();
 	var betrag = prompt("Bitte Rechnungsbetrag eingeben:");
 	if(betrag.length>0) {
@@ -243,7 +243,7 @@ $(".showFotos").click(function(){
 			    resultEl.html("<br />");
 			    var j=0;	
 			    for(j=0; j<anz; j++){
-			    	resultEl.append('<img src="data:image/jpg;base64,' + data['pic_'+j] + '" style="width:300px;" />');
+			    	resultEl.append('<p><img src="data:image/jpg;base64,' + data['pic_'+j] + '" style="width:300px;" /> <span>'+data['picDesc_'+j]+'</span>');
 			    	resultEl.append('<br />');
 			    }
 			    $("#"+caseno+"_showFotoModal").modal('show');
@@ -551,7 +551,23 @@ function reloadTungPics(pid){
 		}
 	});
 }
-
+function sendMail(file){
+	email = '$email';
+	$.ajax({
+		type: "POST",
+		url: "patient/sendEmail",
+		dataType: "json",
+		contentType: "application/json; charset=utf-8",
+		data : JSON.stringify({ to : email, file : file }),
+		success: function (resp) {
+			if(resp.state=="success"){
+				alert("Erfolgreich gesendet!");
+			} else {
+				alert(resp.msg);
+			}
+		}
+	});
+}
 </script>
 <div class="container">
 	<div class="btn-group" role="group" aria-label="..." id="menuBar">
@@ -562,32 +578,38 @@ function reloadTungPics(pid){
 	<div style="text-aligen:center; width:100%;" id="ajaxLoader"><img src="pictures/ajax-loader.gif" /></div>
 	<div id="dataContainer" class="container-fluid" style="margin-top:10px;">
 		<div class="row">
-			<div id="person" class="col-md-5">
-				<div id="patientPortraiContainer">
-				$portrait
-				</div>
-				<div id="persondataContainer">
-					<div id="Persondata">
-						<h3><img id="editPersondata" src="pictures/edit.ico" class="icon edit" /> <img id="savePersondata" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closePersondata" src="pictures/close.ico" class="icon close" style="display:none;" /> $patientsName</h3>
-						<span class="headline">SVNR: </span><span class="content" id="svnr">$svnr</span><br />
-						<span class="headline">Geburtsdatum: </span><span class="content" id="gebdat">$gebdat</span>
-					</div>
-					<div id="Address">
-						<h3><img id="editAddress" src="pictures/edit.ico" class="icon edit" /> <img id="saveAddress" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closeAddress" src="pictures/close.ico" class="icon close" style="display:none;" /> Adresse:</h3>
-						<span class="headline">Stra&szlig;e: </span><span class="content">$street</span><br />
-						<span class="headline">PLZ: </span><span class="content">$zip</span><br />
-						<span class="headline">Ort: </span><span class="content">$location</span><br />
-						<span class="headline">Staat: </span><span class="content">$country</span>
-					</div>
-					<div id="Contact">
-						<h3><img id="editContact" src="pictures/edit.ico" class="icon edit" /> <img id="saveContact" src="pictures/save.ico" class="icon save" style="display:none;" /> <img id="closeContact" src="pictures/close.ico" class="icon close" style="display:none;" /> Kontakt:</h3>
-						<span class="headline">Telefon: </span><span class="content">$telefon</span><br />
-						<span class="headline">Email: </span><span class="content">$email</span>
-					</div>
-				</div>
-			</div>
+			<div class="panel panel-info col-md-5" id="person" style="padding:0;">
+	            <div class="panel-heading">
+	              <h3 class="panel-title">$patientsName</h3>
+	            </div>
+	            <div class="panel-body">
+	              <!--<div class="row">-->
+	                <div class="container-fluid" align="center" id="patientPortraiContainer">
+	                	$portrait
+	                </div>
+	                <div class="container-fluid"> 
+	                  <table class="table table-user-information">
+	                    <tbody>
+	                      <tr><td>SVNR:</td><td id="svnr">$svnr</td></tr>
+	                      <tr><td>Geburtsdatum:</td><td id="gebdat">$gebdat</td></tr>
+	                      <tr><td>Straße:</td><td id="street">$street</td></tr>
+	                      <tr><td>PLZ: </td><td id="zip">$zip</td></tr>
+	                      <tr><td>Ort:</td><td id="location">$location</td></tr>
+	                      <tr><td>Staat:</td><td id="country">$country</td></tr>
+	                      <tr><td>Telefon:</td><td id="telefon">$telefon</td></tr>
+	                      <tr><td>Email:</td><td id="email"><a href="mailto:$email">$email</a></td></tr>
+	                    </tbody>
+	                  </table>
+	                </div>
+	              <!--</div>-->
+	            </div>
+		        <div class="panel-footer" style="text-align:right;">
+		       		<a href="edit.html" data-original-title="Edit this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+		            <a data-original-title="Remove this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+		        </div>
+	        </div>
 			<div id="visitsContainer" class="col-md-7">
-				<div class="panel panel-default">
+				<div class="panel panel-info">
 				  <div class="panel-heading">
 				    <h3 class="panel-title">Besuche</h3>
 				  </div>
@@ -602,8 +624,8 @@ function reloadTungPics(pid){
 		<input type="hidden" id="pid" value="$pid" />
 	</div>
 </div>
-<div class="modal fade modal-wide" id="chooseFotosModal" tabindex="-1" role="dialog" aria-labelledby="Success">
-  <div class="modal-dialog custom-modal-dialog" role="document">
+<div class="modal fade modal-wide-c" id="chooseFotosModal" tabindex="-1" role="dialog" aria-labelledby="Success">
+  <div class="modal-dialog-c custom-modal-dialog" role="document">
     <div class="modal-content" style="height:100%;">
       <div class="modal-header">
         <h4 class="modal-title">Foto Abgleich</h4>
